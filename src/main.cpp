@@ -8,8 +8,13 @@
 
 #include "resources/ResourceManager.hpp"
 
-int g_windowSizeX = 640;
-int g_windowSizeY = 480;
+// glm
+#include "glm/glm.hpp"
+
+const int g_windowSizeX = 640;
+const int g_windowSizeY = 480;
+
+glm::ivec2 g_windowSize( g_windowSizeX, g_windowSizeY );
 
 const char* vertexShader = R"(
 #version 460
@@ -53,9 +58,9 @@ GLfloat texCoords[] = {
 };
 
 void onWindowSizeChangedStatic(GLFWwindow* window, int width, int height){
-    g_windowSizeX = width;
-    g_windowSizeY = height;
-    glViewport(0, 0, g_windowSizeX, g_windowSizeY);
+    g_windowSize.x = width;
+    g_windowSize.y = height;
+    glViewport(0, 0, g_windowSize.x, g_windowSize.y);
 }
 
 void onKeyPressed(GLFWwindow* pWnd, int keyCode, int scanCode, int action, int mode) {
