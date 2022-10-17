@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "renderer/ShaderProgram.hpp"
+#include "renderer/Texture2D.hpp"
 
 #include "resources/ResourceManager.hpp"
 
@@ -43,6 +44,12 @@ GLfloat color[] = {
     1.0f, 0.0f, 0.0f,
     1.0f, 1.0f, 0.0f,
     1.0f, 0.0f, 1.0f,
+};
+
+GLfloat texCoords[] = {
+    0.5f, 1.0f,
+    1.0f, 0.0f,
+    0.0f, 0.0f,
 };
 
 void onWindowSizeChangedStatic(GLFWwindow* window, int width, int height){
@@ -99,7 +106,7 @@ int main( int argc, char** argv ){
             return -1;
         }
 
-        resourceManager.loadTexture( "map", "res/textures/map_8x8.png" );
+        auto texPtr = resourceManager.loadTexture( "map", "res/textures/map_16x16.png" );
         // create vertex data
         GLuint points_vbo;
         glGenBuffers( 1, &points_vbo );
@@ -112,6 +119,12 @@ int main( int argc, char** argv ){
         glBindBuffer( GL_ARRAY_BUFFER, color_vbo );
         glBufferData( GL_ARRAY_BUFFER, sizeof( color ), color, GL_STATIC_DRAW );
 
+        // textures vbo
+        GLuint tex_vbo;
+        glGenBuffers( 1, &tex_vbo );
+        glBindBuffer( GL_ARRAY_BUFFER, tex_vbo );
+        glBufferData( GL_ARRAY_BUFFER, sizeof( texCoords ), texCoords, GL_STATIC_DRAW );
+
 
         // bind data to shader
         GLuint vao;
@@ -120,11 +133,18 @@ int main( int argc, char** argv ){
 
         glEnableVertexAttribArray(0);
         glBindBuffer( GL_ARRAY_BUFFER, points_vbo );
-        glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof( float ) * 3, nullptr );
+        glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
 
         glEnableVertexAttribArray(1);
         glBindBuffer( GL_ARRAY_BUFFER, color_vbo );
-        glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof( float ) * 3, nullptr );
+        glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, 0, nullptr );
+
+        glEnableVertexAttribArray( 2 );
+        glBindBuffer( GL_ARRAY_BUFFER, tex_vbo );
+        glVertexAttribPointer( 2, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
+
+        programPtr->use();
+        programPtr->setInt( "sampler", 0 );// use texture loaded into GL_TEXTURE_0
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
@@ -132,7 +152,9 @@ int main( int argc, char** argv ){
             /* Render here */
             glClear(GL_COLOR_BUFFER_BIT);
             programPtr->use();
+            
             glBindVertexArray( vao );
+            texPtr->bind();
             glDrawArrays( GL_TRIANGLES, 0, 3 );
             /* Swap front and back buffers */
             glfwSwapBuffers(window);

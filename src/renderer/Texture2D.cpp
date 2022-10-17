@@ -25,6 +25,7 @@ Texture2D::Texture2D( GLuint width
     }
 
     glGenTextures( 1, &id_ );
+    glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_2D, id_ );
     glTexImage2D( GL_TEXTURE_2D, 0, mode_, width_, height_, 0, mode_, GL_UNSIGNED_BYTE, dataPtr );
 
@@ -33,6 +34,8 @@ Texture2D::Texture2D( GLuint width
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter );
     glGenerateMipmap( GL_TEXTURE_2D );
+
+    glBindTexture( GL_TEXTURE_2D, 0 );
 }
 
 Texture2D::~Texture2D(){

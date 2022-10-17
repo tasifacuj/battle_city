@@ -1,9 +1,12 @@
 #version 460
 layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec3 vertex_color;
+layout(location = 2) in vec2 tex_coord;
 out vec3 color;
+out vec2 ioTexCoord;
 
 void main(){
     color = vertex_color;
+    ioTexCoord = tex_coord;
     gl_Position = vec4( vertex_position, 1.0 );
 }

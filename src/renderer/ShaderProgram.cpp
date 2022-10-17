@@ -69,4 +69,8 @@ bool ShaderProgram::createShader( std::string const& shaderText, GLenum type, GL
     return true;
 }
 
+void ShaderProgram::setInt( std::string const& name, GLint value ){
+    glUniform1i( glGetUniformLocation( id_, name.c_str() ), value );
+}
+
 }// namespace renderer  

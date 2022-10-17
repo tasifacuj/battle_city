@@ -24,6 +24,7 @@ namespace renderer{
 
         void use();
 
+        void setInt( std::string const& name, GLint value );
     private:
         bool createShader( std::string const& shaderText, GLenum type, GLuint& shaderId );
     };

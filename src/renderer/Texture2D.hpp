@@ -9,7 +9,7 @@ namespace renderer{
         GLuint      id_{0};
         unsigned    width_{0};
         unsigned    height_{0};
-        GLenum      mode_{ -1 };
+        GLenum      mode_{};
     public:
         Texture2D( GLuint width
             , GLuint heigh
