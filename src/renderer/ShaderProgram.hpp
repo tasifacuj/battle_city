@@ -6,6 +6,9 @@
 //glad
 #include "glad/glad.h"
 
+// glm
+#include "glm/glm.hpp"
+
 namespace renderer{
     class ShaderProgram{
     private:
@@ -23,8 +26,9 @@ namespace renderer{
         }
 
         void use();
-
+    public:// == uniforms ==
         void setInt( std::string const& name, GLint value );
+        void setMatrix4( std::string const& matName, glm::mat4 const& m );
     private:
         bool createShader( std::string const& shaderText, GLenum type, GLuint& shaderId );
     };

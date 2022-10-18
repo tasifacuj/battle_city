@@ -3,6 +3,9 @@
 // std
 #include <iostream>
 
+//glm
+#include "glm/gtc/type_ptr.hpp"
+
 namespace renderer{
 
 ShaderProgram::ShaderProgram( std::string const& vertexShader, std::string const& fragShader ){
@@ -71,6 +74,10 @@ bool ShaderProgram::createShader( std::string const& shaderText, GLenum type, GL
 
 void ShaderProgram::setInt( std::string const& name, GLint value ){
     glUniform1i( glGetUniformLocation( id_, name.c_str() ), value );
+}
+
+void ShaderProgram::setMatrix4( std::string const& matName, glm::mat4 const& m ){
+    glUniformMatrix4fv( glGetUniformLocation( id_, matName.c_str() ), 1, GL_FALSE, glm::value_ptr( m ) );
 }
 
 }// namespace renderer  

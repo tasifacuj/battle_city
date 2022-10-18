@@ -10,6 +10,7 @@
 
 // glm
 #include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 const int g_windowSizeX = 640;
 const int g_windowSizeY = 480;
@@ -40,9 +41,9 @@ void main(){
 )";
 
 GLfloat point[] = {
-    0.0f, 0.5f, 0.0f,
-    0.5f, -0.5f, 0.0f,
-    -0.5f, -0.5f, 0.0f,
+    0.0f, 50.f, 0.0f,
+    50.5f, -50.5f, 0.0f,
+    -50.5f, -50.5f, 0.0f,
 };
 
 GLfloat color[] = {
@@ -150,6 +151,13 @@ int main( int argc, char** argv ){
 
         programPtr->use();
         programPtr->setInt( "sampler", 0 );// use texture loaded into GL_TEXTURE_0
+        
+        glm::mat4 model( 1.0f );
+        model = glm::translate( model, glm::vec3( 100.0f, 200.0f, 0.0f ) );
+        glm::mat4 model2 = glm::translate( glm::mat4( 1.0f ), glm::vec3( 590.0f, 50.0f, 0.0f ) );
+
+        glm::mat4 projMatrix = glm::ortho( 0.0f, float( g_windowSize.x ), 0.0f, float( g_windowSize.y ), -100.0f, 100.0f );
+        programPtr->setMatrix4( "projection", projMatrix );
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
@@ -159,8 +167,14 @@ int main( int argc, char** argv ){
             programPtr->use();
             
             glBindVertexArray( vao );
-            texPtr->bind();
-            glDrawArrays( GL_TRIANGLES, 0, 3 );
+                texPtr->bind();
+                programPtr->setMatrix4( "model", model );
+                glDrawArrays( GL_TRIANGLES, 0, 3 );// first triangle
+
+                programPtr->setMatrix4( "model", model2 );
+                glDrawArrays( GL_TRIANGLES, 0, 3 );// second triangle
+            glBindVertexArray( 0 );
+
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
 
