@@ -11,6 +11,7 @@
 namespace renderer{
 
 Sprite::Sprite( std::shared_ptr< Texture2D > texPtr
+            , std::string const& initialSubTexName
             , std::shared_ptr< ShaderProgram > programPtr
             , glm::vec2 const& pos
             , glm::vec2 const& size
@@ -35,19 +36,19 @@ Sprite::Sprite( std::shared_ptr< Texture2D > texPtr
         1.0f, 0.0f,
         0.0f, 0.0f,
     };
-
+    auto const& subTex = texPtr_->getSubTex( initialSubTexName );
     const GLfloat texCoords[] = {
         /**
            u -> v
         */
 
-        0.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 1.0f,
+        subTex.leftBottomUV.x, subTex.leftBottomUV.y,
+        subTex.leftBottomUV.x, subTex.rightTopUV.y,
+        subTex.rightTopUV.x, subTex.rightTopUV.y,
 
-        1.0f, 1.0f,
-        1.0f, 0.0f,
-        0.0f, 0.0f,
+        subTex.rightTopUV.x, subTex.rightTopUV.y,
+        subTex.rightTopUV.x, subTex.leftBottomUV.y,
+        subTex.leftBottomUV.x, subTex.leftBottomUV.y
     };
 
     glGenVertexArrays( 1, &vao_ );
@@ -90,7 +91,7 @@ void Sprite::render(){
     model = glm::translate( model, glm::vec3( 0.5f * size_.x, 0.5f * size_.y, 0.0f ) );
     // 2.2 rotate
     model = glm::rotate( model, glm::radians( angle_ ), glm::vec3( 0.0f, 0.0f, 1.0f ) );
-    // 2.1 put model in the world origin
+    // 2.1 put model in the world origin, because first verice is (0,0)
     model = glm::translate( model, glm::vec3( -0.5f * size_.x, -0.5f * size_.y, 0.0f ) );
     // 1. scale
     model = glm::scale( model, glm::vec3( size_, 1.0f ) );

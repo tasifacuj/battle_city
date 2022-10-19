@@ -5,6 +5,7 @@
 
 // std
 #include <memory>
+#include <string>
 
 // glm
 #include "glm/vec2.hpp"
@@ -22,8 +23,10 @@ namespace renderer{
         GLuint                          vao_{ 0 };
         GLuint                          vertexVBO_{ 0 };
         GLuint                          texVBO_{ 0 };
+        
     public:// == CTOR ==
         Sprite( std::shared_ptr< Texture2D > texPtr
+            , std::string const& initialSubTexName
             , std::shared_ptr< ShaderProgram > programPtr
             , glm::vec2 const& pos = glm::vec2( 0.0f )
             , glm::vec2 const& size = glm::vec2( 1.0f )

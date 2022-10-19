@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
+#include <vector>
 
 namespace renderer{
     class ShaderProgram;
@@ -40,9 +41,20 @@ namespace resources{
         TexturePtr getTexture( std::string const& texttureName );
 
     public:
-        SpritePtr loadSprite( std::string const& name, std::string const& textureName, std::string const& programName, unsigned width, unsigned height );
-        SpritePtr getSprite( std::string const& name );
+        SpritePtr loadSprite( std::string const& name
+            , std::string const& textureName
+            , std::string const& programName
+            , unsigned width
+            , unsigned height
+            , std::string const& initialSubTexName = "default" );
 
+        SpritePtr getSprite( std::string const& name );
+        TexturePtr loadTextureAtlas( std::string const& textureName
+            , std::string const& path
+            , unsigned subWidth
+            , unsigned subHeight
+            , std::vector<std::string> const& subNames
+        );
     private:
         std::string getFileString( std::string const& fpath );
     };

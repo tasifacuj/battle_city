@@ -95,7 +95,7 @@ ResourceManager::TexturePtr ResourceManager::getTexture( std::string const& text
     }
 }
 
-ResourceManager::SpritePtr ResourceManager::loadSprite( std::string const& name, std::string const& textureName, std::string const& programName, unsigned width, unsigned height ){
+ResourceManager::SpritePtr ResourceManager::loadSprite( std::string const& name, std::string const& textureName, std::string const& programName, unsigned width, unsigned height, std::string const& initialSubTexName ){
     auto texPtr = getTexture( textureName );
 
     if( !texPtr ){
@@ -108,7 +108,7 @@ ResourceManager::SpritePtr ResourceManager::loadSprite( std::string const& name,
         return {};
     }
 
-    auto spritePtr = std::make_shared< renderer::Sprite>( texPtr, programPtr, glm::vec2( 0.0f ), glm::vec2( width, height ), 0.0f );
+    auto spritePtr = std::make_shared< renderer::Sprite>( texPtr, initialSubTexName, programPtr, glm::vec2( 0.0f ), glm::vec2( width, height ), 0.0f );
     sprites_[ name ] = spritePtr;
     return spritePtr;
 }
@@ -120,6 +120,40 @@ ResourceManager::SpritePtr ResourceManager::getSprite( std::string const& name )
         std::cout << "Cannot find sprite " << name << std::endl;
         return {};
     }
+}
+
+ResourceManager::TexturePtr ResourceManager::loadTextureAtlas( std::string const& textureName, std::string const& path, unsigned subWidth, unsigned subHeight, std::vector<std::string> const& subNames ){
+    auto texPtr = loadTexture( textureName, path );
+
+    if( !texPtr ){
+        return {};
+    }
+
+    unsigned texWidth = texPtr->width();
+    unsigned texHeight = texPtr->height();
+    unsigned textureOffsetX = 0;
+    unsigned textureOffsetY = texHeight;
+
+    for( auto const& subName : subNames ){
+        float u = static_cast<float>( textureOffsetX ) / texWidth;
+        float v = static_cast<float>( textureOffsetY - subHeight ) / texHeight;
+        glm::vec2 leftBottomUV( u, v );
+
+        float u_rt = static_cast<float>( textureOffsetX + subWidth ) / texWidth;
+        float v_rt = static_cast<float>( textureOffsetY ) / texHeight;
+        glm::vec2 rightTopUV( u_rt, v_rt );
+
+        textureOffsetX += subWidth;
+
+        if( textureOffsetX >= texWidth ){
+            textureOffsetX = 0;
+            textureOffsetY -= subHeight;
+        }
+
+        texPtr->addSubtexture( subName, leftBottomUV, rightTopUV );
+    }
+
+    return texPtr;
 }
 
 }// namespace resources

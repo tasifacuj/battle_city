@@ -98,15 +98,28 @@ int main( int argc, char** argv ){
         }
 
         auto texPtr = resourceManager.loadTexture( "default", "res/textures/map_16x16.png" );
+        std::vector<std::string> subNames{
+            "block",
+            "topBlock",
+            "bottomBlock",
+            "leftBlock",
+            "rightBlock",
+            "topLeftBlock",
+            "topRightBlock",
+            "bottomLeftBlock",
+            "bottomRightBlock",
+            "concrete"
+        };
+        auto texAtlasPtr = resourceManager.loadTextureAtlas( "TexAtlas", "res/textures/map_16x16_.png", 16, 16, subNames );
 
-        auto spritePtr = resourceManager.loadSprite( "default", "default", "sprites_shader", 50 ,100 );
+        auto spritePtr = resourceManager.loadSprite( "default", "TexAtlas", "sprites_shader", 100 ,100, "concrete" );
 
         if( !spritePtr ){
             std::cout << "Failed to load defaut sprite"  << std::endl;
             return -1;
         }
 
-        spritePtr->setPosition( glm::vec2( 590, 100 ) );
+        spritePtr->setPosition( glm::vec2( 190, 100 ) );
 
         // create vertex data
         GLuint points_vbo;
