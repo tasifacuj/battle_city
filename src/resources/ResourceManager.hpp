@@ -8,6 +8,7 @@
 namespace renderer{
     class ShaderProgram;
     class Texture2D;
+    class Sprite;
 }
 
 namespace resources{
@@ -17,12 +18,14 @@ namespace resources{
         using Programs = std::unordered_map< std::string, ProgramPtr >;
         using TexturePtr = std::shared_ptr< renderer::Texture2D >;
         using TextureMap = std::unordered_map< std::string, TexturePtr >;
+        using SpritePtr = std::shared_ptr< renderer::Sprite >;
+        using Sprites = std::unordered_map< std::string, SpritePtr >;
 
     private:// == MEMBERs ==
         std::string exePath_;
         Programs    programs_;
         TextureMap  textures_;
-
+        Sprites     sprites_;
     public:// == ctor ==
         explicit ResourceManager( std::string const& exePath );
         ResourceManager( ResourceManager const& ) = delete;
@@ -35,6 +38,10 @@ namespace resources{
     public:
         TexturePtr loadTexture( std::string const& texttureName, std::string const& path );
         TexturePtr getTexture( std::string const& texttureName );
+
+    public:
+        SpritePtr loadSprite( std::string const& name, std::string const& textureName, std::string const& programName, unsigned width, unsigned height );
+        SpritePtr getSprite( std::string const& name );
 
     private:
         std::string getFileString( std::string const& fpath );

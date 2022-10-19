@@ -5,6 +5,7 @@
 
 #include "renderer/ShaderProgram.hpp"
 #include "renderer/Texture2D.hpp"
+#include "renderer/Sprite.hpp"
 
 #include "resources/ResourceManager.hpp"
 
@@ -17,28 +18,6 @@ const int g_windowSizeY = 480;
 
 glm::ivec2 g_windowSize( g_windowSizeX, g_windowSizeY );
 
-const char* vertexShader = R"(
-#version 460
-layout(location = 0) in vec3 vertex_position;
-layout(location = 1) in vec3 vertex_color;
-out vec3 color;
-
-void main(){
-    color = vertex_color;
-    gl_Position = vec4( vertex_position, 1.0 );
-}
-)";
-
-const char* fragmentShader = R"(
-#version 460
-
-in vec3 color;
-out vec4 frag_color;
-
-void main(){
-    frag_color = vec4( color, 1.0 );
-}
-)";
 
 GLfloat point[] = {
     0.0f, 50.f, 0.0f,
@@ -106,13 +85,29 @@ int main( int argc, char** argv ){
     
     {
         resources::ResourceManager resourceManager( argv[0] );
-        auto programPtr = resourceManager.loadShaders( "main", "res/shaders/vertex.txt", "res/shaders/fragment.txt" );
+        auto programPtr = resourceManager.loadShaders( "default", "res/shaders/vertex.txt", "res/shaders/fragment.txt" );
 
         if( !programPtr ){
             return -1;
         }
 
-        auto texPtr = resourceManager.loadTexture( "map", "res/textures/map_16x16.png" );
+        auto spriteProgramPtr = resourceManager.loadShaders( "sprites_shader", "res/shaders/sprite.vert", "res/shaders/sprite.frag" );
+
+        if( !spriteProgramPtr ){
+            return -1;
+        }
+
+        auto texPtr = resourceManager.loadTexture( "default", "res/textures/map_16x16.png" );
+
+        auto spritePtr = resourceManager.loadSprite( "default", "default", "sprites_shader", 50 ,100 );
+
+        if( !spritePtr ){
+            std::cout << "Failed to load defaut sprite"  << std::endl;
+            return -1;
+        }
+
+        spritePtr->setPosition( glm::vec2( 590, 100 ) );
+
         // create vertex data
         GLuint points_vbo;
         glGenBuffers( 1, &points_vbo );
@@ -150,14 +145,18 @@ int main( int argc, char** argv ){
         glVertexAttribPointer( 2, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
 
         programPtr->use();
-        programPtr->setInt( "sampler", 0 );// use texture loaded into GL_TEXTURE_0
-        
-        glm::mat4 model( 1.0f );
-        model = glm::translate( model, glm::vec3( 100.0f, 200.0f, 0.0f ) );
-        glm::mat4 model2 = glm::translate( glm::mat4( 1.0f ), glm::vec3( 590.0f, 50.0f, 0.0f ) );
+            programPtr->setInt( "sampler", 0 );// use texture loaded into GL_TEXTURE_0
+            
+            glm::mat4 model( 1.0f );
+            model = glm::translate( model, glm::vec3( 100.0f, 200.0f, 0.0f ) );
+            glm::mat4 model2 = glm::translate( glm::mat4( 1.0f ), glm::vec3( 590.0f, 50.0f, 0.0f ) );
 
-        glm::mat4 projMatrix = glm::ortho( 0.0f, float( g_windowSize.x ), 0.0f, float( g_windowSize.y ), -100.0f, 100.0f );
-        programPtr->setMatrix4( "projection", projMatrix );
+            glm::mat4 projMatrix = glm::ortho( 0.0f, float( g_windowSize.x ), 0.0f, float( g_windowSize.y ), -100.0f, 100.0f );
+            programPtr->setMatrix4( "projection", projMatrix );
+
+        spriteProgramPtr->use();
+            spriteProgramPtr->setInt( "sampler", 0 );
+            spriteProgramPtr->setMatrix4( "projection", projMatrix );
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
@@ -174,6 +173,8 @@ int main( int argc, char** argv ){
                 programPtr->setMatrix4( "model", model2 );
                 glDrawArrays( GL_TRIANGLES, 0, 3 );// second triangle
             glBindVertexArray( 0 );
+
+            spritePtr->render();
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);

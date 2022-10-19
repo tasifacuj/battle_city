@@ -4,6 +4,7 @@
 #define STBI_ONLY_PNG
 #include "stb_image.h"
 #include "../renderer/Texture2D.hpp"
+#include "../renderer/Sprite.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -85,10 +86,38 @@ ResourceManager::TexturePtr ResourceManager::loadTexture( std::string const& tex
     return texPtr;
 }
 
-ResourceManager::TexturePtr ResourceManager::getTexture( std::string const& texttureName ){
-    if( textures_.count( texttureName ) ){
-        return textures_[ texttureName ];
+ResourceManager::TexturePtr ResourceManager::getTexture( std::string const& textureName ){
+    if( textures_.count( textureName ) ){
+        return textures_[ textureName ];
     }else{
+        std::cout << "Cannot find texture " << textureName << std::endl;
+        return {};
+    }
+}
+
+ResourceManager::SpritePtr ResourceManager::loadSprite( std::string const& name, std::string const& textureName, std::string const& programName, unsigned width, unsigned height ){
+    auto texPtr = getTexture( textureName );
+
+    if( !texPtr ){
+        return {};
+    }
+
+    auto programPtr = getShaderProgram( programName );
+
+    if( !programPtr ){
+        return {};
+    }
+
+    auto spritePtr = std::make_shared< renderer::Sprite>( texPtr, programPtr, glm::vec2( 0.0f ), glm::vec2( width, height ), 0.0f );
+    sprites_[ name ] = spritePtr;
+    return spritePtr;
+}
+
+ResourceManager::SpritePtr ResourceManager::getSprite( std::string const& name ){
+    if( sprites_.count( name ) ){
+        return sprites_[ name ];
+    }else{
+        std::cout << "Cannot find sprite " << name << std::endl;
         return {};
     }
 }

@@ -9,6 +9,8 @@ add_executable( BattleCity
 	src/renderer/ShaderProgram.hpp
 	src/renderer/Texture2D.cpp
 	src/renderer/Texture2D.hpp
+	src/renderer/Sprite.cpp
+	src/renderer/Sprite.hpp
 
 	src/resources/ResourceManager.cpp
 	src/resources/ResourceManager.hpp

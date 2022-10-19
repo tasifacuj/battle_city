@@ -4,6 +4,7 @@
 
 // std
 #include <string>
+
 namespace renderer{
     class Texture2D{
         GLuint      id_{0};
