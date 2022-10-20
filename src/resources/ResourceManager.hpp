@@ -10,6 +10,7 @@ namespace renderer{
     class ShaderProgram;
     class Texture2D;
     class Sprite;
+    class AnimatedSprite;
 }
 
 namespace resources{
@@ -21,12 +22,15 @@ namespace resources{
         using TextureMap = std::unordered_map< std::string, TexturePtr >;
         using SpritePtr = std::shared_ptr< renderer::Sprite >;
         using Sprites = std::unordered_map< std::string, SpritePtr >;
+        using AnimatedSpritePtr = std::shared_ptr<renderer::AnimatedSprite>;
+        using AnimatedSprites = std::unordered_map< std::string, AnimatedSpritePtr >;
 
     private:// == MEMBERs ==
-        std::string exePath_;
-        Programs    programs_;
-        TextureMap  textures_;
-        Sprites     sprites_;
+        std::string     exePath_;
+        Programs        programs_;
+        TextureMap      textures_;
+        Sprites         sprites_;
+        AnimatedSprites animatedSprites_;
     public:// == ctor ==
         explicit ResourceManager( std::string const& exePath );
         ResourceManager( ResourceManager const& ) = delete;
@@ -49,6 +53,17 @@ namespace resources{
             , std::string const& initialSubTexName = "default" );
 
         SpritePtr getSprite( std::string const& name );
+
+        AnimatedSpritePtr loadAnimatedSprite( std::string const& name
+            , std::string const& textureName
+            , std::string const& programName
+            , unsigned width
+            , unsigned height
+            , std::string const& initialSubTexName = "default" 
+        );
+
+        AnimatedSpritePtr getAnimatedSprite( std::string const& name );
+
         TexturePtr loadTextureAtlas( std::string const& textureName
             , std::string const& path
             , unsigned subWidth

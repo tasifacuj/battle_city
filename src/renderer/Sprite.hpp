@@ -15,6 +15,7 @@ namespace renderer{
     class ShaderProgram;
 
     class Sprite{
+    protected:// == MEMBERS ==
         std::shared_ptr< Texture2D >    texPtr_;
         std::shared_ptr< ShaderProgram >programPtr_;
         glm::vec2                       position_;
@@ -35,10 +36,10 @@ namespace renderer{
         Sprite( Sprite const& ) = delete;
         Sprite& operator =( Sprite const& ) = delete;
 
-        ~Sprite();
+        virtual ~Sprite();
     
     public:// == METHODS ==
-        void render();
+        virtual void render();
         
         void setPosition( glm::vec2 const& p ){
             position_ = p;

@@ -5,6 +5,7 @@
 #include "stb_image.h"
 #include "../renderer/Texture2D.hpp"
 #include "../renderer/Sprite.hpp"
+#include "../renderer/AnimatedSprite.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -154,6 +155,35 @@ ResourceManager::TexturePtr ResourceManager::loadTextureAtlas( std::string const
     }
 
     return texPtr;
+}
+
+ResourceManager::AnimatedSpritePtr ResourceManager::getAnimatedSprite( std::string const& name ){
+    auto it = animatedSprites_.find( name );
+    return it != animatedSprites_.end() ? it->second : AnimatedSpritePtr();
+}
+
+ResourceManager::AnimatedSpritePtr ResourceManager::loadAnimatedSprite( std::string const& name
+    , std::string const& textureName
+    , std::string const& programName
+    , unsigned width
+    , unsigned height
+    , std::string const& initialSubTexName
+){
+    auto texPtr = getTexture( textureName );
+
+    if( !texPtr ){
+        return {};
+    }
+
+    auto programPtr = getShaderProgram( programName );
+
+    if( !programPtr ){
+        return {};
+    }
+
+    auto spritePtr = std::make_shared< renderer::AnimatedSprite>( texPtr, initialSubTexName, programPtr, glm::vec2( 0.0f ), glm::vec2( width, height ), 0.0f );
+    animatedSprites_[ name ] = spritePtr;
+    return spritePtr;
 }
 
 }// namespace resources

@@ -1,12 +1,17 @@
+// glad
 #include "glad/glad.h"
+
+// glfw
 #include <GLFW/glfw3.h>
 
+// std
 #include <iostream>
+#include <chrono>
 
 #include "renderer/ShaderProgram.hpp"
 #include "renderer/Texture2D.hpp"
 #include "renderer/Sprite.hpp"
-
+#include "renderer/AnimatedSprite.hpp"
 #include "resources/ResourceManager.hpp"
 
 // glm
@@ -43,9 +48,15 @@ void onWindowSizeChangedStatic(GLFWwindow* window, int width, int height){
     glViewport(0, 0, g_windowSize.x, g_windowSize.y);
 }
 
+bool isEagle = false;
+
 void onKeyPressed(GLFWwindow* pWnd, int keyCode, int scanCode, int action, int mode) {
     if (keyCode == GLFW_KEY_ESCAPE) {
         glfwSetWindowShouldClose(pWnd, GL_TRUE);
+    }
+
+    if( keyCode == GLFW_KEY_C && action == GLFW_PRESS ){
+        isEagle = !isEagle;
     }
 }
 
@@ -107,11 +118,34 @@ int main( int argc, char** argv ){
             "topLeftBlock",
             "topRightBlock",
             "bottomLeftBlock",
-            "bottomRightBlock",
-            "concrete"
-        };
-        auto texAtlasPtr = resourceManager.loadTextureAtlas( "TexAtlas", "res/textures/map_16x16_.png", 16, 16, subNames );
 
+            "bottomRightBlock",
+            "concrete",
+            "topConcrete",
+            "bottomConcreate",
+            "leftConcrete",
+            "rightConcrete",
+            "topLeftConcrete",
+            "topRightConcrete",
+            
+            "bottomLeftConcrete",
+            "bottomRightConcrete",
+            "water1",
+            "water2",
+            "water3",
+            "trees",
+            "ice",
+            "wall",
+
+            "eagle",
+            "deadEagle",
+            "nothing",
+            "reaspawn1",
+            "reaspawn2",
+            "reaspawn3",
+            "reaspawn4",
+        };
+        resourceManager.loadTextureAtlas( "TexAtlas", "res/textures/map_16x16_.png", 16, 16, subNames );
         auto spritePtr = resourceManager.loadSprite( "default", "TexAtlas", "sprites_shader", 100 ,100, "concrete" );
 
         if( !spritePtr ){
@@ -120,6 +154,23 @@ int main( int argc, char** argv ){
         }
 
         spritePtr->setPosition( glm::vec2( 190, 100 ) );
+
+        auto animatedSpritePtr = resourceManager.loadAnimatedSprite( "animated_sprite", "TexAtlas", "sprites_shader", 100 ,100, "concrete" );
+        animatedSpritePtr->setPosition( glm::vec2( 300, 300 ) );
+        renderer::AnimatedSprite::FrameVec waterFrames{
+            { "water1", 1000'000'000 },
+            { "water2", 1000'000'000 },
+            { "water3", 1000'000'000 },
+        };
+
+        renderer::AnimatedSprite::FrameVec eagleFrames{
+            { "eagle", 1000'000'000 },
+            { "deadEagle", 1000'000'000 }
+        };
+
+        animatedSpritePtr->addState( "waterState", waterFrames );
+        animatedSpritePtr->addState( "eagleState", eagleFrames );
+        animatedSpritePtr->setState( "waterState" );
 
         // create vertex data
         GLuint points_vbo;
@@ -171,9 +222,20 @@ int main( int argc, char** argv ){
             spriteProgramPtr->setInt( "sampler", 0 );
             spriteProgramPtr->setMatrix4( "projection", projMatrix );
 
+        auto lastTime = std::chrono::high_resolution_clock::now();
+
         /* Loop until the user closes the window */
-        while (!glfwWindowShouldClose(window))
-        {
+        while (!glfwWindowShouldClose(window)){
+            if( isEagle ){
+                animatedSpritePtr->setState( "eagleState" );
+            }else{
+                animatedSpritePtr->setState( "waterState" );
+            }
+            auto now = std::chrono::high_resolution_clock::now();
+            size_t duration = std::chrono::duration_cast< std::chrono::nanoseconds >( now - lastTime ).count();
+            lastTime = now;
+            animatedSpritePtr->update( duration );
+
             /* Render here */
             glClear(GL_COLOR_BUFFER_BIT);
             programPtr->use();
@@ -188,6 +250,8 @@ int main( int argc, char** argv ){
             glBindVertexArray( 0 );
 
             spritePtr->render();
+
+            animatedSpritePtr->render();
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
