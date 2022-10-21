@@ -17,6 +17,9 @@ add_executable( BattleCity
 	src/resources/ResourceManager.cpp
 	src/resources/ResourceManager.hpp
 	src/resources/stb_image.h
+
+	src/game/Game.cpp
+	src/game/Game.hpp
 )
 
 target_compile_features( ${PROJECT_NAME} PUBLIC cxx_std_17 )

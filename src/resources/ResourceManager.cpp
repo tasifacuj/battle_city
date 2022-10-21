@@ -13,8 +13,13 @@
 
 namespace resources{
 
-ResourceManager::ResourceManager( std::string const& exePath )
-: exePath_( exePath ){
+ResourceManager& ResourceManager::getInstance(){
+    static ResourceManager s_resMgr;
+    return s_resMgr;
+}
+
+void ResourceManager::initialize( std::string const& exePath ){
+    exePath_ =  exePath;
     auto pos = exePath.find_last_of( "\\" );
 
     if( pos != std::string::npos ){
@@ -184,6 +189,13 @@ ResourceManager::AnimatedSpritePtr ResourceManager::loadAnimatedSprite( std::str
     auto spritePtr = std::make_shared< renderer::AnimatedSprite>( texPtr, initialSubTexName, programPtr, glm::vec2( 0.0f ), glm::vec2( width, height ), 0.0f );
     animatedSprites_[ name ] = spritePtr;
     return spritePtr;
+}
+
+void ResourceManager::free(){
+    animatedSprites_.clear();
+    sprites_.clear();
+    textures_.clear();
+    programs_.clear();
 }
 
 }// namespace resources

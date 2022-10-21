@@ -32,19 +32,23 @@ namespace resources{
         Sprites         sprites_;
         AnimatedSprites animatedSprites_;
     public:// == ctor ==
-        explicit ResourceManager( std::string const& exePath );
+        ResourceManager() = default;
         ResourceManager( ResourceManager const& ) = delete;
         ResourceManager& operator =( ResourceManager const& ) = delete;
         ~ResourceManager() = default;
+    public:
+        static ResourceManager& getInstance();
 
     public:// == ResourceManager ==
+        void initialize( std::string const& exePath );
+        void free();
+    
         ProgramPtr loadShaders( std::string const& shaderName, std::string const& vertexPath, std::string const& fragPath  );
         ProgramPtr getShaderProgram( std::string const& name );
-    public:
+    
         TexturePtr loadTexture( std::string const& texttureName, std::string const& path );
         TexturePtr getTexture( std::string const& texttureName );
 
-    public:
         SpritePtr loadSprite( std::string const& name
             , std::string const& textureName
             , std::string const& programName
@@ -73,4 +77,4 @@ namespace resources{
     private:
         std::string getFileString( std::string const& fpath );
     };
-}
+} 
