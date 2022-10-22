@@ -4,16 +4,19 @@
 #include "../renderer/Sprite.hpp"
 #include "../renderer/AnimatedSprite.hpp"
 #include "../resources/ResourceManager.hpp"
+#include "Tank.hpp"
 
 // std
 #include <iostream>
 #include <chrono>
 
-
 // glm
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
+
+//glfw
+#include "GLFW/glfw3.h"
 
 Game::Game( glm::ivec2 const& size )
 : windowSize_( size ){
@@ -114,13 +117,77 @@ bool Game::initialize(){
         spriteProgramPtr->setInt( "sampler", 0 );
         spriteProgramPtr->setMatrix4( "projection", projMatrix );
 
+
+    {// tank
+        std::vector<std::string> subTankNames{
+            "tankTop1",
+            "tankTop2",
+            "tankLeft1",
+            "tankLeft2",
+            "tankBottom1",
+            "tankBottom2",
+            "tankRight1",
+            "tankRight2",
+        };
+        resourceManager.loadTextureAtlas( "TankTexAtlas", "res/textures/tanks.png", 16, 16, subTankNames );
+        auto tankSpritePtr = resourceManager.loadAnimatedSprite( "tank_sprite", "TankTexAtlas", "sprites_shader", 100 ,100, "tankTop1" );
+        
+        renderer::AnimatedSprite::FrameVec tankTopFrames{
+            { "tankTop1", 500'000'000 },
+            { "tankTop2", 500'000'000}
+        };
+        
+        renderer::AnimatedSprite::FrameVec tankLeftFrames{
+            { "tankLeft1", 500'000'000 },
+            { "tankLeft2", 500'000'000}
+        };
+        
+        renderer::AnimatedSprite::FrameVec tankBottomFrames{
+            { "tankBottom1", 500'000'000 },
+            { "tankBottom2", 500'000'000 }
+        };
+
+        renderer::AnimatedSprite::FrameVec tankRightFrames{
+            { "tankRight1", 500'000'000  },
+            { "tankRight2", 500'000'000 }
+        };
+
+        tankSpritePtr->addState( "tankTopState", tankTopFrames );
+        tankSpritePtr->addState( "tankBottomState", tankBottomFrames );
+        tankSpritePtr->addState( "tankLeftState", tankLeftFrames );
+        tankSpritePtr->addState( "tankRightState", tankRightFrames );
+        
+        tankSpritePtr->setState( "tankTopState" );
+        tankPtr_ = std::make_unique< game::Tank >( tankSpritePtr, 0.0000001f, glm::vec2( 100.0f, 100.0f ) );
+    }
+
     return true;
 }
 
 void Game::update( size_t deltaT ){
-    resources::ResourceManager::getInstance().getAnimatedSprite( "animated_sprite" )->update( deltaT );
+    if( tankPtr_ ){
+        if( keys_[ GLFW_KEY_W ] ){
+            tankPtr_->setOrient( game::Tank::Orienation::Top );
+            tankPtr_->move( true );
+        }else if( keys_[ GLFW_KEY_A ] ){
+            tankPtr_->setOrient( game::Tank::Orienation::Left );
+            tankPtr_->move( true );
+        }else if( keys_[ GLFW_KEY_S ] ){
+            tankPtr_->setOrient( game::Tank::Orienation::Bottom );
+            tankPtr_->move( true );
+        }else if( keys_[ GLFW_KEY_D ] ){
+            tankPtr_->setOrient( game::Tank::Orienation::Right );
+            tankPtr_->move( true );
+        }else{
+            tankPtr_->move( false );
+        }
+
+        tankPtr_->update( deltaT );
+    }
 }
 
 void Game::render(){
-    resources::ResourceManager::getInstance().getAnimatedSprite( "animated_sprite" )->render();
+    if( tankPtr_ ){
+        tankPtr_->render();
+    }
 }

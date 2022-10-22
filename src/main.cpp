@@ -23,7 +23,7 @@ const int g_windowSizeX = 640;
 const int g_windowSizeY = 480;
 
 glm::ivec2 g_windowSize( g_windowSizeX, g_windowSizeY );
-Game game( g_windowSize );
+Game g_game( g_windowSize );
 
 void onWindowSizeChangedStatic(GLFWwindow* window, int width, int height){
     g_windowSize.x = width;
@@ -38,7 +38,7 @@ void onKeyPressed(GLFWwindow* pWnd, int keyCode, int scanCode, int action, int m
         glfwSetWindowShouldClose(pWnd, GL_TRUE);
     }
 
-    game.setKey( keyCode, action );
+    g_game.setKey( keyCode, action );
 }
 
 int main( int argc, char** argv ){
@@ -79,7 +79,7 @@ int main( int argc, char** argv ){
         resources::ResourceManager& resourceManager = resources::ResourceManager::getInstance();
         resourceManager.initialize( argv[0] );
         
-        if( !game.initialize() ){
+        if( !g_game.initialize() ){
             std::cout << "Failed to initialize game" << std::endl;
             return -1;
         }
@@ -88,12 +88,14 @@ int main( int argc, char** argv ){
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window)){
+            /* Render here */
+            glClear(GL_COLOR_BUFFER_BIT);
             auto now = std::chrono::high_resolution_clock::now();
             size_t duration = std::chrono::duration_cast< std::chrono::nanoseconds >( now - lastTime ).count();
             lastTime = now;
-            game.update( duration );
+            g_game.update( duration );
 
-            game.render();
+            g_game.render();
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
 

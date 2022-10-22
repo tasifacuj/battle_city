@@ -20,6 +20,8 @@ add_executable( BattleCity
 
 	src/game/Game.cpp
 	src/game/Game.hpp
+	src/game/Tank.cpp
+	src/game/Tank.hpp
 )
 
 target_compile_features( ${PROJECT_NAME} PUBLIC cxx_std_17 )
