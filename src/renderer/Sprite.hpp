@@ -24,7 +24,7 @@ namespace renderer{
         GLuint                          vao_{ 0 };
         GLuint                          vertexVBO_{ 0 };
         GLuint                          texVBO_{ 0 };
-        
+        GLuint                          indicesVBO_{ 0 };
     public:// == CTOR ==
         Sprite( std::shared_ptr< Texture2D > texPtr
             , std::string const& initialSubTexName

@@ -59,10 +59,7 @@ void AnimatedSprite::render(){
             subTex.leftBottomUV.x, subTex.leftBottomUV.y,
             subTex.leftBottomUV.x, subTex.rightTopUV.y,
             subTex.rightTopUV.x, subTex.rightTopUV.y,
-
-            subTex.rightTopUV.x, subTex.rightTopUV.y,
-            subTex.rightTopUV.x, subTex.leftBottomUV.y,
-            subTex.leftBottomUV.x, subTex.leftBottomUV.y
+            subTex.rightTopUV.x, subTex.leftBottomUV.y
         };
 
         glBindBuffer( GL_ARRAY_BUFFER, texVBO_ );
