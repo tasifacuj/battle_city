@@ -6,10 +6,11 @@ IndexBufferObject::~IndexBufferObject(){
     glDeleteBuffers( 1, &vbo_ );
 }
 
-void IndexBufferObject::create( const void* dataPtr, size_t size ){
+void IndexBufferObject::create( const void* dataPtr, GLuint cnt ){
     glGenBuffers( 1, &vbo_ );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, vbo_ );
-    glBufferData( GL_ELEMENT_ARRAY_BUFFER, size, dataPtr, GL_STATIC_DRAW );
+    glBufferData( GL_ELEMENT_ARRAY_BUFFER, cnt * sizeof( GLuint ), dataPtr, GL_STATIC_DRAW );
+    count_ = cnt;
 }
 
 void IndexBufferObject::bind()const{

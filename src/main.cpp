@@ -12,6 +12,8 @@
 #include "renderer/Texture2D.hpp"
 #include "renderer/Sprite.hpp"
 #include "renderer/AnimatedSprite.hpp"
+#include "renderer/Renderer.hpp"
+
 #include "resources/ResourceManager.hpp"
 #include "game/Game.hpp"
 
@@ -73,7 +75,7 @@ int main( int argc, char** argv ){
 
     std::cout << "Opengl " <<  GLVersion.major << "." << GLVersion.minor << std::endl;
     std::cout << "Renerer: " << glGetString(GL_RENDERER) << std::endl;
-    glClearColor( 0, 0, 0, 1 );
+    renderer::Renderer::setClearColor( 0, 0, 0, 1 );
     
     {
         resources::ResourceManager& resourceManager = resources::ResourceManager::getInstance();
@@ -89,13 +91,15 @@ int main( int argc, char** argv ){
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window)){
             /* Render here */
-            glClear(GL_COLOR_BUFFER_BIT);
+            renderer::Renderer::clear();
+            
             auto now = std::chrono::high_resolution_clock::now();
             size_t duration = std::chrono::duration_cast< std::chrono::nanoseconds >( now - lastTime ).count();
             lastTime = now;
-            g_game.update( duration );
 
+            g_game.update( duration );
             g_game.render();
+
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
 

@@ -2,6 +2,7 @@
 #include "Texture2D.hpp"
 #include "ShaderProgram.hpp"
 #include "VertexBufferLayout.hpp"
+#include "Renderer.hpp"
 
 // std
 #include <iostream>
@@ -63,7 +64,7 @@ Sprite::Sprite( std::shared_ptr< Texture2D > texPtr
         textureLayout.addElementLayoutFloat( 2, false );
         vao_.addBuffer( texBuffer_, textureLayout );
 
-        indicesBuffer_.create( indices, sizeof( indices ) );
+        indicesBuffer_.create( indices, 6 );
 
     vao_.unbind();
     indicesBuffer_.unbind();
@@ -90,12 +91,11 @@ void Sprite::render(){
     model = glm::scale( model, glm::vec3( size_, 1.0f ) );
 
     programPtr_->setMatrix4( "model", model );
-    vao_.bind();
-        glActiveTexture( GL_TEXTURE0 );
-        texPtr_->bind();
-        // glDrawArrays( GL_TRIANGLES, 0, 6 );
-        glDrawElements( GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr );
-    vao_.unbind();
+    glActiveTexture( GL_TEXTURE0 );
+    texPtr_->bind();
+    // glDrawArrays( GL_TRIANGLES, 0, 6 );
+    // glDrawElements( GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr );
+    Renderer::draw( vao_, indicesBuffer_, *programPtr_ );
 }
 
 }// namespace renderer

@@ -21,6 +21,8 @@ add_executable( BattleCity
 	src/renderer/VertexArrayObject.hpp
 	src/renderer/VertexBufferLayout.cpp
 	src/renderer/VertexBufferLayout.hpp
+	src/renderer/Renderer.cpp
+	src/renderer/Renderer.hpp
 
 	src/resources/ResourceManager.cpp
 	src/resources/ResourceManager.hpp

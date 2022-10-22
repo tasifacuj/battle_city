@@ -5,6 +5,7 @@
 namespace renderer{
     class IndexBufferObject{
         GLuint  vbo_{0};
+        GLuint count_{ 0 };
     public:// == CTORS ==   
         IndexBufferObject() = default;
         IndexBufferObject( IndexBufferObject const& ) = delete;
@@ -12,8 +13,11 @@ namespace renderer{
         ~IndexBufferObject();
 
     public: // == vbo ==
-        void create( const void* dataPtr, size_t size );
+        void create( const void* dataPtr, GLuint cnt );
         void bind()const;
         void unbind()const;
+        GLuint count()const{
+            return count_;
+        }
     };
 }
