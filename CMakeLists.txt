@@ -13,6 +13,10 @@ add_executable( BattleCity
 	src/renderer/Sprite.hpp
 	src/renderer/AnimatedSprite.cpp
 	src/renderer/AnimatedSprite.hpp
+	src/renderer/VertexBufferObject.cpp
+	src/renderer/VertexBufferObject.hpp
+	src/renderer/IndexBufferObject.cpp
+	src/renderer/IndexBufferObject.hpp
 
 	src/resources/ResourceManager.cpp
 	src/resources/ResourceManager.hpp

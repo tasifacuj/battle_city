@@ -53,27 +53,20 @@ Sprite::Sprite( std::shared_ptr< Texture2D > texPtr
 
     glGenVertexArrays( 1, &vao_ );
     glBindVertexArray( vao_ );
-
-        glGenBuffers( 1, &vertexVBO_ );
-        glBindBuffer( GL_ARRAY_BUFFER, vertexVBO_ );
-        glBufferData( GL_ARRAY_BUFFER, sizeof( vertexCoords ), vertexCoords, GL_STATIC_DRAW );
+        vertexBuffer_.create( vertexCoords, sizeof( vertexCoords ) );
 
         // textures vbo
-        glGenBuffers( 1, &texVBO_ );
-        glBindBuffer( GL_ARRAY_BUFFER, texVBO_ );
-        glBufferData( GL_ARRAY_BUFFER, sizeof( texCoords ), texCoords, GL_STATIC_DRAW );
-    
+        texBuffer_.create( texCoords, sizeof( texCoords ) );
+            
         glEnableVertexAttribArray(0);
-        glBindBuffer( GL_ARRAY_BUFFER, vertexVBO_ );
+        vertexBuffer_.bind();
         glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
 
         glEnableVertexAttribArray( 1 );
-        glBindBuffer( GL_ARRAY_BUFFER, texVBO_ );
+        texBuffer_.bind();
         glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
 
-        glGenBuffers( 1, &indicesVBO_ );
-        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indicesVBO_ );
-        glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( indices ), indices, GL_STATIC_DRAW );
+        indicesBuffer_.create( indices, sizeof( indices ) );
 
     glBindBuffer( GL_ARRAY_BUFFER, 0 );
     glBindVertexArray( 0 );
@@ -82,9 +75,6 @@ Sprite::Sprite( std::shared_ptr< Texture2D > texPtr
 
 Sprite::~Sprite(){
     glDeleteVertexArrays( 1, &vao_ );
-    glDeleteBuffers( 1, &vertexVBO_ );
-    glDeleteBuffers( 1, &indicesVBO_ );
-    glDeleteBuffers( 1, &texVBO_ );
 }
 
 void Sprite::render(){

@@ -62,9 +62,7 @@ void AnimatedSprite::render(){
             subTex.rightTopUV.x, subTex.leftBottomUV.y
         };
 
-        glBindBuffer( GL_ARRAY_BUFFER, texVBO_ );
-        glBufferSubData( GL_ARRAY_BUFFER, 0, sizeof( texCoords ), texCoords );
-        glBindBuffer( GL_ARRAY_BUFFER, 0 );
+        texBuffer_.update( texCoords, sizeof( texCoords ) );
         dirty_ = false;
     }
 

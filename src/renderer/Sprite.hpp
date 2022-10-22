@@ -10,6 +10,9 @@
 // glm
 #include "glm/vec2.hpp"
 
+#include "VertexBufferObject.hpp"
+#include "IndexBufferObject.hpp"
+
 namespace renderer{
     class Texture2D;
     class ShaderProgram;
@@ -22,9 +25,9 @@ namespace renderer{
         glm::vec2                       size_;
         float                           angle_;
         GLuint                          vao_{ 0 };
-        GLuint                          vertexVBO_{ 0 };
-        GLuint                          texVBO_{ 0 };
-        GLuint                          indicesVBO_{ 0 };
+        VertexBufferObject              vertexBuffer_;
+        VertexBufferObject              texBuffer_;
+        IndexBufferObject               indicesBuffer_;
     public:// == CTOR ==
         Sprite( std::shared_ptr< Texture2D > texPtr
             , std::string const& initialSubTexName
