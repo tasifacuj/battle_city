@@ -12,6 +12,7 @@
 
 #include "VertexBufferObject.hpp"
 #include "IndexBufferObject.hpp"
+#include "VertexArrayObject.hpp"
 
 namespace renderer{
     class Texture2D;
@@ -24,7 +25,7 @@ namespace renderer{
         glm::vec2                       position_;
         glm::vec2                       size_;
         float                           angle_;
-        GLuint                          vao_{ 0 };
+        VertexArrayObject               vao_;
         VertexBufferObject              vertexBuffer_;
         VertexBufferObject              texBuffer_;
         IndexBufferObject               indicesBuffer_;

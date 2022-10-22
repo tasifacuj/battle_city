@@ -1,6 +1,7 @@
 #include "Sprite.hpp"
 #include "Texture2D.hpp"
 #include "ShaderProgram.hpp"
+#include "VertexBufferLayout.hpp"
 
 // std
 #include <iostream>
@@ -51,30 +52,25 @@ Sprite::Sprite( std::shared_ptr< Texture2D > texPtr
         2, 3, 0
     };
 
-    glGenVertexArrays( 1, &vao_ );
-    glBindVertexArray( vao_ );
+    vao_.bind();
         vertexBuffer_.create( vertexCoords, sizeof( vertexCoords ) );
+        VertexBufferLayout vertexLayout;
+        vertexLayout.addElementLayoutFloat( 2, false );
+        vao_.addBuffer( vertexBuffer_, vertexLayout );
 
-        // textures vbo
         texBuffer_.create( texCoords, sizeof( texCoords ) );
-            
-        glEnableVertexAttribArray(0);
-        vertexBuffer_.bind();
-        glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
-
-        glEnableVertexAttribArray( 1 );
-        texBuffer_.bind();
-        glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, nullptr );
+        VertexBufferLayout textureLayout;
+        textureLayout.addElementLayoutFloat( 2, false );
+        vao_.addBuffer( texBuffer_, textureLayout );
 
         indicesBuffer_.create( indices, sizeof( indices ) );
 
-    glBindBuffer( GL_ARRAY_BUFFER, 0 );
-    glBindVertexArray( 0 );
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
+    vao_.unbind();
+    indicesBuffer_.unbind();
 }
 
-Sprite::~Sprite(){
-    glDeleteVertexArrays( 1, &vao_ );
+Sprite::~Sprite()
+{
 }
 
 void Sprite::render(){
@@ -94,12 +90,12 @@ void Sprite::render(){
     model = glm::scale( model, glm::vec3( size_, 1.0f ) );
 
     programPtr_->setMatrix4( "model", model );
-    glBindVertexArray( vao_ );
+    vao_.bind();
         glActiveTexture( GL_TEXTURE0 );
         texPtr_->bind();
         // glDrawArrays( GL_TRIANGLES, 0, 6 );
         glDrawElements( GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr );
-    glBindVertexArray( 0 );
+    vao_.unbind();
 }
 
 }// namespace renderer
