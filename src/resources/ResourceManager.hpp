@@ -6,6 +6,10 @@
 #include <memory>
 #include <vector>
 
+// rj
+#include "rapidjson/document.h"
+#include "rapidjson/error/en.h"
+
 namespace renderer{
     class ShaderProgram;
     class Texture2D;
@@ -74,6 +78,8 @@ namespace resources{
             , unsigned subHeight
             , std::vector<std::string> const& subNames
         );
+
+        bool loadJSONResources( std::string const& path );
     private:
         std::string getFileString( std::string const& fpath );
     };

@@ -11,6 +11,8 @@
 #include <iostream>
 #include <sstream>
 
+namespace rj = rapidjson;
+
 namespace resources{
 
 ResourceManager& ResourceManager::getInstance(){
@@ -196,6 +198,104 @@ void ResourceManager::free(){
     sprites_.clear();
     textures_.clear();
     programs_.clear();
+}
+
+bool ResourceManager::loadJSONResources( std::string const& path ){
+    std::string content = getFileString( path );
+
+    if( content.empty() ){
+        std::cout << path << " json is empty";
+        return false;
+    }
+
+    rapidjson::Document document;
+    rapidjson::ParseResult errval = document.Parse( content.c_str() );
+
+    if( !errval ){
+        std::cout << "file: " << path <<  ", JSON parse error: " << GetParseError_En( errval.Code() ) << ", offset: " << errval.Offset() << std::endl;
+        return false;
+    }
+
+    {
+        // 1. shaders
+        auto shader_it = document.FindMember( "shaders" );
+
+        if( shader_it != document.MemberEnd() ){
+            rj::Value const& shVal = shader_it->value;
+
+            for( rj::Value const& shader : shVal.GetArray() ){
+                std::string name = shader["name"].GetString();
+                std::string filePath_v = shader[ "filePath_v" ].GetString();
+                std::string filePath_f = shader[ "filePath_f" ].GetString();
+                loadShaders( name, filePath_v, filePath_f );
+            }
+        }
+    }
+
+    {
+        // 2. texture atlases
+        auto tex_it = document.FindMember( "textureAtlases" );
+
+        if( tex_it != document.MemberEnd() ){
+            rj::Value const& texVal = tex_it->value;
+
+            for( rj::Value const& tex : texVal.GetArray() ){
+                std::string name = tex["name"].GetString();
+                std::string filePath = tex[ "filePath" ].GetString();
+                unsigned subtextureWidth = tex[ "subtextureWidth" ].GetUint();
+                unsigned subtextureHeight = tex[ "subtextureHeight" ].GetUint();
+                std::vector< std::string > subnames;
+                rj::Value const& subVal = tex["subtextureNames"];
+
+                for( rj::Value const& subn : subVal.GetArray() ){
+                    subnames.push_back( subn.GetString() );
+                }
+
+                loadTextureAtlas( name, filePath, subtextureWidth, subtextureHeight, subnames );
+            }
+        }
+    }
+
+    {// 3. animated sprite
+        auto it = document.FindMember( "animatedSprites" );
+
+        if( it != document.MemberEnd() ){
+            auto const& spritesVal = it->value;
+
+            for( rj::Value const& spriteVal : spritesVal.GetArray() ){
+                std::string name = spriteVal["name"].GetString();
+                std::string texAtlas = spriteVal["textureAtlas"].GetString();
+                std::string shader = spriteVal[ "shader" ].GetString();
+                unsigned w = spriteVal[ "initialWidth" ].GetUint();
+                unsigned h = spriteVal[ "initialHeight" ].GetUint();
+                std::string intialSubTexture = spriteVal["intialSubTexture"].GetString();
+                auto spritePtr = loadAnimatedSprite( name, texAtlas, shader, w, h, intialSubTexture );
+
+                if( !spritePtr ){
+                    std::cout << "Failed to load " << name << " sprite\n";
+                    continue;
+                }
+
+                rj::Value const& statesVal = spriteVal[ "states" ];
+
+                for( auto const& stateVal : statesVal.GetArray() ){
+                    std::string statename = stateVal["stateName"].GetString();
+                    renderer::AnimatedSprite::FrameVec frames;
+                    rj::Value const& framesVal = stateVal["frames"];
+
+                    for( rj::Value const& frameVal : framesVal.GetArray() ){
+                        std::string subtexture = frameVal["subtexture"].GetString();
+                        unsigned dur = frameVal["duration"].GetUint();
+                        frames.emplace_back( renderer::AnimatedSprite::Frame{subtexture, dur} );
+                    }
+
+                    spritePtr->addState( statename, frames );
+                }
+            }
+        }
+    }
+
+    return true;
 }
 
 }// namespace resources

@@ -1,0 +1,134 @@
+{
+    "shaders" : [
+        {
+            "name" : "sprites_shader",
+            "filePath_v" : "res/shaders/sprite.vert",
+            "filePath_f" : "res/shaders/sprite.frag"
+        }
+    ],
+    "textureAtlases" : [
+        {
+            "name" : "MapTexAtlas",
+            "filePath" : "res/textures/map_16x16_.png",
+            "width" : 128,
+            "heght" : 128,
+            "subtextureWidth" : 16,
+            "subtextureHeight" : 16,
+            "subtextureNames" : [
+                "block",
+                "topBlock",
+                "bottomBlock",
+                "leftBlock",
+                "rightBlock",
+                "topLeftBlock",
+                "topRightBlock",
+                "bottomLeftBlock",
+                "bottomRightBlock",
+                "concrete",
+                "topConcrete",
+                "bottomConcreate",
+                "leftConcrete",
+                "rightConcrete",
+                "topLeftConcrete",
+                "topRightConcrete",
+                "bottomLeftConcrete",
+                "bottomRightConcrete",
+                "water1",
+                "water2",
+                "water3",
+                "trees",
+                "ice",
+                "wall",
+                "eagle",
+                "deadEagle",
+                "nothing",
+                "reaspawn1",
+                "reaspawn2",
+                "reaspawn3",
+                "reaspawn4"
+            ]
+        },
+        {
+            "name" : "TankTexAtlas",
+            "filePath" : "res/textures/tanks.png",
+            "width" : 256,
+            "heght" : 256,
+            "subtextureWidth" : 16,
+            "subtextureHeight" : 16,
+            "subtextureNames" : [
+                "yellowType1_Top1",
+                "yellowType1_Top2",
+                "yellowType1_Left1",
+                "yellowType1_Left2",
+                "yellowType1_Bottom1",
+                "yellowType1_Bottom2",
+                "yellowType1_Right1",
+                "yellowType1_Right2"
+            ]
+        }
+    ],
+    "animatedSprites" : [
+        {
+            "name" : "TankAnimatedSprite",
+            "textureAtlas" : "TankTexAtlas",
+            "shader" : "sprites_shader",
+            "initialWidth" : 100,
+            "initialHeight" : 100,
+            "intialSubTexture" : "yellowType1_Top1",
+            "states" : [
+                {
+                    "stateName" : "tankTopState",
+                    "frames" : [
+                        { 
+                            "subtexture" : "yellowType1_Top1", 
+                            "duration" : 500000000 
+                        },
+                        { 
+                            "subtexture" : "yellowType1_Top2", 
+                            "duration" : 500000000 
+                        }
+                    ]
+                },
+                {
+                    "stateName" : "tankBottomState",
+                    "frames" : [
+                        { 
+                            "subtexture" : "yellowType1_Bottom1", 
+                            "duration" : 500000000 
+                        },
+                        { 
+                            "subtexture" : "yellowType1_Bottom2", 
+                            "duration" : 500000000 
+                        }
+                    ]
+                },
+                {
+                    "stateName" : "tankLeftState",
+                    "frames" : [
+                        { 
+                            "subtexture" : "yellowType1_Left1", 
+                            "duration" : 500000000 
+                        },
+                        { 
+                            "subtexture" : "yellowType1_Left2", 
+                            "duration" : 500000000 
+                        }
+                    ]
+                },
+                {
+                    "stateName" : "tankRightState",
+                    "frames" : [
+                        { 
+                            "subtexture" : "yellowType1_Right1", 
+                            "duration" : 500000000 
+                        },
+                        { 
+                            "subtexture" : "yellowType1_Right2", 
+                            "duration" : 500000000 
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

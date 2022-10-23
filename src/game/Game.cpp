@@ -27,135 +27,59 @@ Game::~Game(){}
 
 bool Game::initialize(){
     resources::ResourceManager& resourceManager = resources::ResourceManager::getInstance();
-    auto programPtr = resourceManager.loadShaders( "default", "res/shaders/vertex.txt", "res/shaders/fragment.txt" );
-
-    if( !programPtr ){
+    
+    if( !resourceManager.loadJSONResources( "res/resources.json" ) ){
+        std::cout << "Game failed to load resources" << std::endl;
         return false;
     }
 
-    auto spriteProgramPtr = resourceManager.loadShaders( "sprites_shader", "res/shaders/sprite.vert", "res/shaders/sprite.frag" );
+    auto spriteProgramPtr = resourceManager.getShaderProgram( "sprites_shader" );
 
     if( !spriteProgramPtr ){
+        std::cout << "ERROR: No shader program sprites_shader" << std::endl;
         return false;
     }
 
-    auto texPtr = resourceManager.loadTexture( "default", "res/textures/map_16x16.png" );
-    std::vector<std::string> subNames{
-        "block",
-        "topBlock",
-        "bottomBlock",
-        "leftBlock",
-        "rightBlock",
-        "topLeftBlock",
-        "topRightBlock",
-        "bottomLeftBlock",
 
-        "bottomRightBlock",
-        "concrete",
-        "topConcrete",
-        "bottomConcreate",
-        "leftConcrete",
-        "rightConcrete",
-        "topLeftConcrete",
-        "topRightConcrete",
-        
-        "bottomLeftConcrete",
-        "bottomRightConcrete",
-        "water1",
-        "water2",
-        "water3",
-        "trees",
-        "ice",
-        "wall",
-
-        "eagle",
-        "deadEagle",
-        "nothing",
-        "reaspawn1",
-        "reaspawn2",
-        "reaspawn3",
-        "reaspawn4",
-    };
-    resourceManager.loadTextureAtlas( "TexAtlas", "res/textures/map_16x16_.png", 16, 16, subNames );
-    auto spritePtr = resourceManager.loadSprite( "default", "TexAtlas", "sprites_shader", 100 ,100, "concrete" );
-
-    if( !spritePtr ){
-        std::cout << "Failed to load defaut sprite"  << std::endl;
-        return false;
-    }
-
-    spritePtr->setPosition( glm::vec2( 190, 100 ) );
-
-    auto animatedSpritePtr = resourceManager.loadAnimatedSprite( "animated_sprite", "TexAtlas", "sprites_shader", 100 ,100, "concrete" );
-    animatedSpritePtr->setPosition( glm::vec2( 300, 300 ) );
-    renderer::AnimatedSprite::FrameVec waterFrames{
-        { "water1", 1000'000'000 },
-        { "water2", 1000'000'000 },
-        { "water3", 1000'000'000 },
-    };
-
-    renderer::AnimatedSprite::FrameVec eagleFrames{
-        { "eagle", 1000'000'000 },
-        { "deadEagle", 1000'000'000 }
-    };
-
-    animatedSpritePtr->addState( "waterState", waterFrames );
-    animatedSpritePtr->addState( "eagleState", eagleFrames );
-    animatedSpritePtr->setState( "waterState" );
-
-    programPtr->use();
-        programPtr->setInt( "sampler", 0 );// use texture loaded into GL_TEXTURE_0
-        
-        glm::mat4 model( 1.0f );
-        model = glm::translate( model, glm::vec3( 100.0f, 200.0f, 0.0f ) );
-        glm::mat4 model2 = glm::translate( glm::mat4( 1.0f ), glm::vec3( 590.0f, 50.0f, 0.0f ) );
-
-        glm::mat4 projMatrix = glm::ortho( 0.0f, float( windowSize_.x ), 0.0f, float( windowSize_.y ), -100.0f, 100.0f );
-        programPtr->setMatrix4( "projection", projMatrix );
-
+    glm::mat4 projMatrix = glm::ortho( 0.0f, float( windowSize_.x ), 0.0f, float( windowSize_.y ), -100.0f, 100.0f );
     spriteProgramPtr->use();
         spriteProgramPtr->setInt( "sampler", 0 );
         spriteProgramPtr->setMatrix4( "projection", projMatrix );
 
 
     {// tank
-        std::vector<std::string> subTankNames{
-            "tankTop1",
-            "tankTop2",
-            "tankLeft1",
-            "tankLeft2",
-            "tankBottom1",
-            "tankBottom2",
-            "tankRight1",
-            "tankRight2",
-        };
-        resourceManager.loadTextureAtlas( "TankTexAtlas", "res/textures/tanks.png", 16, 16, subTankNames );
-        auto tankSpritePtr = resourceManager.loadAnimatedSprite( "tank_sprite", "TankTexAtlas", "sprites_shader", 100 ,100, "tankTop1" );
-        
-        renderer::AnimatedSprite::FrameVec tankTopFrames{
-            { "tankTop1", 500'000'000 },
-            { "tankTop2", 500'000'000}
-        };
-        
-        renderer::AnimatedSprite::FrameVec tankLeftFrames{
-            { "tankLeft1", 500'000'000 },
-            { "tankLeft2", 500'000'000}
-        };
-        
-        renderer::AnimatedSprite::FrameVec tankBottomFrames{
-            { "tankBottom1", 500'000'000 },
-            { "tankBottom2", 500'000'000 }
-        };
+       
+        auto tankSpritePtr = resourceManager.getAnimatedSprite( "TankAnimatedSprite" );
 
-        renderer::AnimatedSprite::FrameVec tankRightFrames{
-            { "tankRight1", 500'000'000  },
-            { "tankRight2", 500'000'000 }
-        };
+        if( !tankSpritePtr ){
+            std::cout << "Failed to load tanks";
+            return false;
+        }
+        
+        // renderer::AnimatedSprite::FrameVec tankTopFrames{
+        //     { "yellowType1_Top1", 500'000'000 },
+        //     { "yellowType1_Top2", 500'000'000}
+        // };
+        
+        // renderer::AnimatedSprite::FrameVec tankLeftFrames{
+        //     { "yellowType1_Left1", 500'000'000 },
+        //     { "yellowType1_Left2", 500'000'000}
+        // };
+        
+        // renderer::AnimatedSprite::FrameVec tankBottomFrames{
+        //     { "yellowType1_Bottom1", 500'000'000 },
+        //     { "yellowType1_Bottom2", 500'000'000 }
+        // };
 
-        tankSpritePtr->addState( "tankTopState", tankTopFrames );
-        tankSpritePtr->addState( "tankBottomState", tankBottomFrames );
-        tankSpritePtr->addState( "tankLeftState", tankLeftFrames );
-        tankSpritePtr->addState( "tankRightState", tankRightFrames );
+        // renderer::AnimatedSprite::FrameVec tankRightFrames{
+        //     { "yellowType1_Right1", 500'000'000  },
+        //     { "yellowType1_Right2", 500'000'000 }
+        // };
+
+        // tankSpritePtr->addState( "tankTopState", tankTopFrames );
+        // tankSpritePtr->addState( "tankBottomState", tankBottomFrames );
+        // tankSpritePtr->addState( "tankLeftState", tankLeftFrames );
+        // tankSpritePtr->addState( "tankRightState", tankRightFrames );
         
         tankSpritePtr->setState( "tankTopState" );
         tankPtr_ = std::make_unique< game::Tank >( tankSpritePtr, 0.0000001f, glm::vec2( 100.0f, 100.0f ) );
