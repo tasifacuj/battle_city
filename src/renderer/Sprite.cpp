@@ -14,15 +14,9 @@ namespace renderer{
 
 Sprite::Sprite( std::shared_ptr< Texture2D > texPtr
             , std::string const& initialSubTexName
-            , std::shared_ptr< ShaderProgram > programPtr
-            , glm::vec2 const& pos
-            , glm::vec2 const& size
-            , float angle )
+            , std::shared_ptr< ShaderProgram > programPtr)
 : texPtr_( texPtr )
-, programPtr_( programPtr )
-, position_( pos )
-, size_( size )
-, angle_( angle ){
+, programPtr_( programPtr ){
     const GLfloat vertexCoords[] = {
         /**
          * 1--2
@@ -74,21 +68,21 @@ Sprite::~Sprite()
 {
 }
 
-void Sprite::render(){
+void Sprite::render( glm::vec2 const& pos, glm::vec2 const& sz, float angle ){
     programPtr_->use();
     glm::mat4 model( 1.0f );
 
     // 3. translate
-    model = glm::translate( model, glm::vec3( position_, 0.0f ) );
+    model = glm::translate( model, glm::vec3( pos, 0.0f ) );
     // 2. rotate
     // 2.3 put the model back where it was
-    model = glm::translate( model, glm::vec3( 0.5f * size_.x, 0.5f * size_.y, 0.0f ) );
+    model = glm::translate( model, glm::vec3( 0.5f * sz.x, 0.5f * sz.y, 0.0f ) );
     // 2.2 rotate
-    model = glm::rotate( model, glm::radians( angle_ ), glm::vec3( 0.0f, 0.0f, 1.0f ) );
+    model = glm::rotate( model, glm::radians( angle ), glm::vec3( 0.0f, 0.0f, 1.0f ) );
     // 2.1 put model in the world origin, because first verice is (0,0)
-    model = glm::translate( model, glm::vec3( -0.5f * size_.x, -0.5f * size_.y, 0.0f ) );
+    model = glm::translate( model, glm::vec3( -0.5f * sz.x, -0.5f * sz.y, 0.0f ) );
     // 1. scale
-    model = glm::scale( model, glm::vec3( size_, 1.0f ) );
+    model = glm::scale( model, glm::vec3( sz, 1.0f ) );
 
     programPtr_->setMatrix4( "model", model );
     glActiveTexture( GL_TEXTURE0 );

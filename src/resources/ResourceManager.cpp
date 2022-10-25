@@ -71,7 +71,7 @@ ResourceManager::ProgramPtr ResourceManager::getShaderProgram( std::string const
     if( programs_.count( name ) ){
         return programs_[ name ];
     }else{
-        std::cout << "Shader program " << name << "does not exist" << std::endl;
+        std::cout << "Shader program " << name << " does not exist" << std::endl;
         return {};
     }
 }
@@ -103,7 +103,7 @@ ResourceManager::TexturePtr ResourceManager::getTexture( std::string const& text
     }
 }
 
-ResourceManager::SpritePtr ResourceManager::loadSprite( std::string const& name, std::string const& textureName, std::string const& programName, unsigned width, unsigned height, std::string const& initialSubTexName ){
+ResourceManager::SpritePtr ResourceManager::loadSprite( std::string const& name, std::string const& textureName, std::string const& programName, std::string const& initialSubTexName ){
     auto texPtr = getTexture( textureName );
 
     if( !texPtr ){
@@ -116,7 +116,7 @@ ResourceManager::SpritePtr ResourceManager::loadSprite( std::string const& name,
         return {};
     }
 
-    auto spritePtr = std::make_shared< renderer::Sprite>( texPtr, initialSubTexName, programPtr, glm::vec2( 0.0f ), glm::vec2( width, height ), 0.0f );
+    auto spritePtr = std::make_shared< renderer::Sprite>( texPtr, initialSubTexName, programPtr );
     sprites_[ name ] = spritePtr;
     return spritePtr;
 }
@@ -172,8 +172,6 @@ ResourceManager::AnimatedSpritePtr ResourceManager::getAnimatedSprite( std::stri
 ResourceManager::AnimatedSpritePtr ResourceManager::loadAnimatedSprite( std::string const& name
     , std::string const& textureName
     , std::string const& programName
-    , unsigned width
-    , unsigned height
     , std::string const& initialSubTexName
 ){
     auto texPtr = getTexture( textureName );
@@ -188,7 +186,7 @@ ResourceManager::AnimatedSpritePtr ResourceManager::loadAnimatedSprite( std::str
         return {};
     }
 
-    auto spritePtr = std::make_shared< renderer::AnimatedSprite>( texPtr, initialSubTexName, programPtr, glm::vec2( 0.0f ), glm::vec2( width, height ), 0.0f );
+    auto spritePtr = std::make_shared< renderer::AnimatedSprite>( texPtr, initialSubTexName, programPtr );
     animatedSprites_[ name ] = spritePtr;
     return spritePtr;
 }
@@ -266,10 +264,8 @@ bool ResourceManager::loadJSONResources( std::string const& path ){
                 std::string name = spriteVal["name"].GetString();
                 std::string texAtlas = spriteVal["textureAtlas"].GetString();
                 std::string shader = spriteVal[ "shader" ].GetString();
-                unsigned w = spriteVal[ "initialWidth" ].GetUint();
-                unsigned h = spriteVal[ "initialHeight" ].GetUint();
                 std::string intialSubTexture = spriteVal["intialSubTexture"].GetString();
-                auto spritePtr = loadAnimatedSprite( name, texAtlas, shader, w, h, intialSubTexture );
+                auto spritePtr = loadAnimatedSprite( name, texAtlas, shader, intialSubTexture );
 
                 if( !spritePtr ){
                     std::cout << "Failed to load " << name << " sprite\n";
@@ -290,6 +286,55 @@ bool ResourceManager::loadJSONResources( std::string const& path ){
                     }
 
                     spritePtr->addState( statename, frames );
+                }
+            }
+        }
+    }
+
+    {// 4. map
+        auto lev_it = document.FindMember( "levels" );
+
+        if( lev_it != document.MemberEnd() ){
+            rj::Value const& levelVal = lev_it->value;
+
+            for( rj::Value const& lvl : levelVal.GetArray() ){
+                rj::Value const& descriptionVal = lvl["description"];//array
+                std::vector< std::string > rows;
+                size_t maxLen = 0;
+
+                for( rj::Value const& row : descriptionVal.GetArray() ){
+                    rows.push_back( row.GetString() );
+
+                    if( maxLen < rows.back().size() ){
+                        maxLen = rows.back().size();
+                    }
+                }
+
+                for( auto& row : rows ){
+                    while( row.size() < maxLen ) row.append( 1, 'D' );
+                }
+
+                levels_.emplace_back( rows );
+            }
+        }
+    }
+
+    {// 5. ізкшеуі
+        auto it = document.FindMember( "sprites" );
+
+        if( it != document.MemberEnd() ){
+            auto const& spritesVal = it->value;
+
+            for( rj::Value const& spriteVal : spritesVal.GetArray() ){
+                std::string name = spriteVal["name"].GetString();
+                std::string texAtlas = spriteVal["textureAtlas"].GetString();
+                std::string shader = spriteVal[ "shader" ].GetString();
+                std::string subtexture = spriteVal["subTextureName"].GetString();
+                auto spritePtr = loadSprite( name, texAtlas, shader, subtexture );
+
+                if( !spritePtr ){
+                    std::cout << "Failed to load " << name << " sprite\n";
+                    continue;
                 }
             }
         }

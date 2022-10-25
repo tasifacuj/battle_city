@@ -22,9 +22,6 @@ namespace renderer{
     protected:// == MEMBERS ==
         std::shared_ptr< Texture2D >    texPtr_;
         std::shared_ptr< ShaderProgram >programPtr_;
-        glm::vec2                       position_;
-        glm::vec2                       size_;
-        float                           angle_;
         VertexArrayObject               vao_;
         VertexBufferObject              vertexBuffer_;
         VertexBufferObject              texBuffer_;
@@ -33,9 +30,7 @@ namespace renderer{
         Sprite( std::shared_ptr< Texture2D > texPtr
             , std::string const& initialSubTexName
             , std::shared_ptr< ShaderProgram > programPtr
-            , glm::vec2 const& pos = glm::vec2( 0.0f )
-            , glm::vec2 const& size = glm::vec2( 1.0f )
-            , float angle = 0.0f );
+        );
 
         Sprite( Sprite const& ) = delete;
         Sprite& operator =( Sprite const& ) = delete;
@@ -43,18 +38,6 @@ namespace renderer{
         virtual ~Sprite();
     
     public:// == METHODS ==
-        virtual void render();
-        
-        void setPosition( glm::vec2 const& p ){
-            position_ = p;
-        }
-
-        void setSize( glm::vec2 const& s ){
-            size_ = s;
-        }
-
-        void rotate( float angle ){
-            angle_ = angle;
-        }
+        virtual void render( glm::vec2 const& pos, glm::vec2 const& sz, float angle );
     };
 }// namespace renderer

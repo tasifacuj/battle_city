@@ -21,8 +21,8 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-const int g_windowSizeX = 640;
-const int g_windowSizeY = 480;
+const int g_windowSizeX = 13 * 16;
+const int g_windowSizeY = 14 * 16;
 
 glm::ivec2 g_windowSize( g_windowSizeX, g_windowSizeY );
 Game g_game( g_windowSize );

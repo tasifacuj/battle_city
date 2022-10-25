@@ -28,6 +28,9 @@ namespace resources{
         using Sprites = std::unordered_map< std::string, SpritePtr >;
         using AnimatedSpritePtr = std::shared_ptr<renderer::AnimatedSprite>;
         using AnimatedSprites = std::unordered_map< std::string, AnimatedSpritePtr >;
+        
+        using LevelDescription = std::vector< std::string >;
+        using Levels = std::vector< LevelDescription >;
 
     private:// == MEMBERs ==
         std::string     exePath_;
@@ -35,6 +38,7 @@ namespace resources{
         TextureMap      textures_;
         Sprites         sprites_;
         AnimatedSprites animatedSprites_;
+        Levels          levels_;
     public:// == ctor ==
         ResourceManager() = default;
         ResourceManager( ResourceManager const& ) = delete;
@@ -56,8 +60,6 @@ namespace resources{
         SpritePtr loadSprite( std::string const& name
             , std::string const& textureName
             , std::string const& programName
-            , unsigned width
-            , unsigned height
             , std::string const& initialSubTexName = "default" );
 
         SpritePtr getSprite( std::string const& name );
@@ -65,8 +67,6 @@ namespace resources{
         AnimatedSpritePtr loadAnimatedSprite( std::string const& name
             , std::string const& textureName
             , std::string const& programName
-            , unsigned width
-            , unsigned height
             , std::string const& initialSubTexName = "default" 
         );
 
@@ -80,6 +80,10 @@ namespace resources{
         );
 
         bool loadJSONResources( std::string const& path );
+
+        Levels const& getLevels()const{
+            return levels_;
+        }
     private:
         std::string getFileString( std::string const& fpath );
     };

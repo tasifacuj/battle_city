@@ -4,7 +4,8 @@
 #include "../renderer/Sprite.hpp"
 #include "../renderer/AnimatedSprite.hpp"
 #include "../resources/ResourceManager.hpp"
-#include "Tank.hpp"
+#include "objects/Tank.hpp"
+#include "Level.hpp"
 
 // std
 #include <iostream>
@@ -33,10 +34,10 @@ bool Game::initialize(){
         return false;
     }
 
-    auto spriteProgramPtr = resourceManager.getShaderProgram( "sprites_shader" );
+    auto spriteProgramPtr = resourceManager.getShaderProgram( "spriteShader" );
 
     if( !spriteProgramPtr ){
-        std::cout << "ERROR: No shader program sprites_shader" << std::endl;
+        std::cout << "ERROR: No shader program spriteShader" << std::endl;
         return false;
     }
 
@@ -56,39 +57,19 @@ bool Game::initialize(){
             return false;
         }
         
-        // renderer::AnimatedSprite::FrameVec tankTopFrames{
-        //     { "yellowType1_Top1", 500'000'000 },
-        //     { "yellowType1_Top2", 500'000'000}
-        // };
-        
-        // renderer::AnimatedSprite::FrameVec tankLeftFrames{
-        //     { "yellowType1_Left1", 500'000'000 },
-        //     { "yellowType1_Left2", 500'000'000}
-        // };
-        
-        // renderer::AnimatedSprite::FrameVec tankBottomFrames{
-        //     { "yellowType1_Bottom1", 500'000'000 },
-        //     { "yellowType1_Bottom2", 500'000'000 }
-        // };
-
-        // renderer::AnimatedSprite::FrameVec tankRightFrames{
-        //     { "yellowType1_Right1", 500'000'000  },
-        //     { "yellowType1_Right2", 500'000'000 }
-        // };
-
-        // tankSpritePtr->addState( "tankTopState", tankTopFrames );
-        // tankSpritePtr->addState( "tankBottomState", tankBottomFrames );
-        // tankSpritePtr->addState( "tankLeftState", tankLeftFrames );
-        // tankSpritePtr->addState( "tankRightState", tankRightFrames );
-        
-        tankSpritePtr->setState( "tankTopState" );
-        tankPtr_ = std::make_unique< game::Tank >( tankSpritePtr, 0.0000001f, glm::vec2( 100.0f, 100.0f ) );
+        // tankSpritePtr->setState( "tankTopState" );
+        tankPtr_ = std::make_unique< game::Tank >( tankSpritePtr, 0.0000001f, glm::vec2( 0.0f, 0.0f ), glm::vec2( 16.0f, 16.0f ) );
+        level0Ptr_ = std::make_unique< game::Level >( resourceManager.getLevels()[0] );
     }
 
     return true;
 }
 
 void Game::update( size_t deltaT ){
+    if( level0Ptr_ ){
+        level0Ptr_->update( deltaT );
+    }
+
     if( tankPtr_ ){
         if( keys_[ GLFW_KEY_W ] ){
             tankPtr_->setOrient( game::Tank::Orienation::Top );
@@ -111,6 +92,10 @@ void Game::update( size_t deltaT ){
 }
 
 void Game::render(){
+    if( level0Ptr_ ){
+        level0Ptr_->render();
+    }
+
     if( tankPtr_ ){
         tankPtr_->render();
     }

@@ -11,10 +11,7 @@ namespace renderer{
 AnimatedSprite::AnimatedSprite( std::shared_ptr< Texture2D > texPtr
     , std::string const& initialSubTexName
     , std::shared_ptr< ShaderProgram > programPtr
-    , glm::vec2 const& pos 
-    , glm::vec2 const& size
-    , float angle
-) : Sprite( texPtr, initialSubTexName, programPtr, pos, size, angle ){
+) : Sprite( texPtr, initialSubTexName, programPtr ){
     animationDurationIt_ = stateMap_.end();
 }
 
@@ -48,7 +45,7 @@ void AnimatedSprite::update( size_t deltaTMS ){
     }
 }
 
-void AnimatedSprite::render(){
+void AnimatedSprite::render(glm::vec2 const& pos, glm::vec2 const& sz, float angle){
     if( dirty_ ){
         auto const& subTex = texPtr_->getSubTex( animationDurationIt_->second[frame_].first );
         const GLfloat texCoords[] = {
@@ -66,7 +63,7 @@ void AnimatedSprite::render(){
         dirty_ = false;
     }
 
-    Sprite::render();
+    Sprite::render( pos, sz, angle );
 }
 
 }//namespace renderer

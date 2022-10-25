@@ -25,12 +25,9 @@ namespace renderer{
         AnimatedSprite( std::shared_ptr< Texture2D > texPtr
             , std::string const& initialSubTexName
             , std::shared_ptr< ShaderProgram > programPtr
-            , glm::vec2 const& pos = glm::vec2( 0.0f )
-            , glm::vec2 const& size = glm::vec2( 1.0f )
-            , float angle = 0.0f 
         );
     public:// == Sprite ==
-        virtual void render() override;
+        virtual void render( glm::vec2 const& pos, glm::vec2 const& sz, float angle ) override;
 
     public:// == AnimatedSprite ==
         /**

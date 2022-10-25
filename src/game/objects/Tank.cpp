@@ -1,28 +1,27 @@
 #include "Tank.hpp"
-#include "../renderer/AnimatedSprite.hpp"
+#include "../../renderer/AnimatedSprite.hpp"
 // #include "../renderer/Res"
 
 namespace game{
-Tank::Tank( std::shared_ptr< renderer::AnimatedSprite > sprite, float spd, glm::vec2 const& pos )
-:orient_( Orienation::Top )
+Tank::Tank( std::shared_ptr< renderer::AnimatedSprite > sprite, float spd, glm::vec2 const& pos, glm::vec2 const& size )
+: GameObject( pos, size, 0.0f )
+, orient_( Orienation::Top )
 , spritePtr_( sprite )
 , isMoving_( false )
-, position_( pos )
 , moveOffset_( 0.0f, 1.0f )
-, spd_( spd ){
-    spritePtr_->setPosition( position_ );
+, spd_( spd )
+{
 }
 
 void Tank::update( size_t deltaT ){
     if( isMoving_ ){
         position_ += deltaT * spd_ * moveOffset_ ;
-        spritePtr_->setPosition( position_ );
         spritePtr_->update( deltaT );
     }
 }
 
 void Tank::render()const{
-    spritePtr_->render();
+    spritePtr_->render( position_, size_, rotationAngle_ );
 }
 
 void Tank::move( bool m ){
