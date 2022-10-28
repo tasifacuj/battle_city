@@ -11,8 +11,6 @@ add_executable( BattleCity
 	src/renderer/Texture2D.hpp
 	src/renderer/Sprite.cpp
 	src/renderer/Sprite.hpp
-	src/renderer/AnimatedSprite.cpp
-	src/renderer/AnimatedSprite.hpp
 	src/renderer/VertexBufferObject.cpp
 	src/renderer/VertexBufferObject.hpp
 	src/renderer/IndexBufferObject.cpp
@@ -23,6 +21,8 @@ add_executable( BattleCity
 	src/renderer/VertexBufferLayout.hpp
 	src/renderer/Renderer.cpp
 	src/renderer/Renderer.hpp
+	src/renderer/SpriteAnimator.cpp
+	src/renderer/SpriteAnimator.hpp
 
 	src/resources/ResourceManager.cpp
 	src/resources/ResourceManager.hpp
@@ -54,6 +54,7 @@ target_link_libraries(${PROJECT_NAME} glad)
 
 include_directories( external/glm )
 include_directories( external/rapidjson/include )
+include_directories( $(PROJECT_SOURCE_DIR)/src )
 
 set_target_properties( ${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/ )
 

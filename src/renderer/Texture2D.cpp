@@ -53,7 +53,12 @@ void Texture2D::addSubtexture( std::string const& name, glm::vec2 bottomLeft, gl
 Texture2D::Subtexture2D const& Texture2D::getSubTex( std::string const& name )const{
     static Subtexture2D empty;
     auto it = subTex_.find( name );
-    return it != subTex_.end() ? it->second : empty;
+    
+    if( it != subTex_.end() ){
+        return it->second ;
+    }else{
+        return empty;
+    }
 }
 
 }// namespace renderer

@@ -6,7 +6,7 @@
 
 // std
 #include <iostream>
-
+#include <limits>
 // glm
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -68,7 +68,25 @@ Sprite::~Sprite()
 {
 }
 
-void Sprite::render( glm::vec2 const& pos, glm::vec2 const& sz, float angle ){
+void Sprite::render( glm::vec2 const& pos, glm::vec2 const& sz, float angle, size_t frameId ){
+    if( frameId != frameId_ ){
+        auto const& fd = frames_[ frameId ];
+
+        const GLfloat texCoords[] = {
+            /**
+             u -> v
+            */
+
+            fd.leftBottomUV.x, fd.leftBottomUV.y,
+            fd.leftBottomUV.x, fd.rightTopUV.y,
+            fd.rightTopUV.x, fd.rightTopUV.y,
+            fd.rightTopUV.x, fd.leftBottomUV.y
+        };
+
+        texBuffer_.update( texCoords, sizeof( texCoords ) );
+        frameId_ = frameId;
+    }
+    
     programPtr_->use();
     glm::mat4 model( 1.0f );
 

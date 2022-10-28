@@ -6,10 +6,12 @@
 // glm
 #include "glm/vec2.hpp"
 
+// project
 #include "GameObjectInterface.hpp"
+#include "../../renderer/SpriteAnimator.hpp"
 
 namespace renderer{
-    class AnimatedSprite;
+    class Sprite;
 }
 
 namespace game{
@@ -23,13 +25,30 @@ namespace game{
         };
 
     private:
-        Orienation                                  orient_;
-        std::shared_ptr< renderer::AnimatedSprite > spritePtr_;
-        bool                                        isMoving_{false};
-        glm::vec2                                   moveOffset_;
-        float                                       spd_;
+        Orienation                          orient_;
+
+        std::shared_ptr< renderer::Sprite > spriteTop_;
+        std::shared_ptr< renderer::Sprite > spriteBottom_;
+        std::shared_ptr< renderer::Sprite > spriteLeft_;
+        std::shared_ptr< renderer::Sprite > spriteRight_;
+        
+        bool                                isMoving_{false};
+        glm::vec2                           moveOffset_;
+        float                               spd_;
+
+        renderer::SpriteAnimator            animatorTop_;
+        renderer::SpriteAnimator            animatorBottom_;
+        renderer::SpriteAnimator            animatorLeft_;
+        renderer::SpriteAnimator            animatorRight_;
+
     public:// == CTORs ==
-        explicit Tank( std::shared_ptr< renderer::AnimatedSprite > sprite, float spd, glm::vec2 const& pos, glm::vec2 const& zize );
+        explicit Tank( std::shared_ptr< renderer::Sprite > spriteTop
+        , std::shared_ptr< renderer::Sprite > spriteBottom
+        , std::shared_ptr< renderer::Sprite > spriteLeft
+        , std::shared_ptr< renderer::Sprite > spriteRight
+        , float spd
+        , glm::vec2 const& pos
+        , glm::vec2 const& zize );
 
     public:// == RenderObjectInterface ==
         virtual void render()const override;

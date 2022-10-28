@@ -14,7 +14,6 @@ namespace renderer{
     class ShaderProgram;
     class Texture2D;
     class Sprite;
-    class AnimatedSprite;
 }
 
 namespace resources{
@@ -26,8 +25,6 @@ namespace resources{
         using TextureMap = std::unordered_map< std::string, TexturePtr >;
         using SpritePtr = std::shared_ptr< renderer::Sprite >;
         using Sprites = std::unordered_map< std::string, SpritePtr >;
-        using AnimatedSpritePtr = std::shared_ptr<renderer::AnimatedSprite>;
-        using AnimatedSprites = std::unordered_map< std::string, AnimatedSpritePtr >;
         
         using LevelDescription = std::vector< std::string >;
         using Levels = std::vector< LevelDescription >;
@@ -37,7 +34,6 @@ namespace resources{
         Programs        programs_;
         TextureMap      textures_;
         Sprites         sprites_;
-        AnimatedSprites animatedSprites_;
         Levels          levels_;
     public:// == ctor ==
         ResourceManager() = default;
@@ -63,14 +59,6 @@ namespace resources{
             , std::string const& initialSubTexName = "default" );
 
         SpritePtr getSprite( std::string const& name );
-
-        AnimatedSpritePtr loadAnimatedSprite( std::string const& name
-            , std::string const& textureName
-            , std::string const& programName
-            , std::string const& initialSubTexName = "default" 
-        );
-
-        AnimatedSpritePtr getAnimatedSprite( std::string const& name );
 
         TexturePtr loadTextureAtlas( std::string const& textureName
             , std::string const& path

@@ -2,7 +2,6 @@
 #include "../renderer/ShaderProgram.hpp"
 #include "../renderer/Texture2D.hpp"
 #include "../renderer/Sprite.hpp"
-#include "../renderer/AnimatedSprite.hpp"
 #include "../resources/ResourceManager.hpp"
 #include "objects/Tank.hpp"
 #include "Level.hpp"
@@ -50,15 +49,15 @@ bool Game::initialize(){
 
     {// tank
        
-        auto tankSpritePtr = resourceManager.getAnimatedSprite( "TankAnimatedSprite" );
-
-        if( !tankSpritePtr ){
-            std::cout << "Failed to load tanks";
-            return false;
-        }
-        
         // tankSpritePtr->setState( "tankTopState" );
-        tankPtr_ = std::make_unique< game::Tank >( tankSpritePtr, 0.0000001f, glm::vec2( 0.0f, 0.0f ), glm::vec2( 16.0f, 16.0f ) );
+        tankPtr_ = std::make_unique< game::Tank >( 
+            resourceManager.getSprite( "tankSprite_top" )
+            , resourceManager.getSprite( "tankSprite_bottom" )
+            , resourceManager.getSprite( "tankSprite_left" )
+            , resourceManager.getSprite( "tankSprite_right" )
+            , 0.0000001f
+            , glm::vec2( 0.0f, 0.0f )
+            , glm::vec2( 16.0f, 16.0f ) );
         level0Ptr_ = std::make_unique< game::Level >( resourceManager.getLevels()[0] );
     }
 

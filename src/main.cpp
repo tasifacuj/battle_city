@@ -11,7 +11,6 @@
 #include "renderer/ShaderProgram.hpp"
 #include "renderer/Texture2D.hpp"
 #include "renderer/Sprite.hpp"
-#include "renderer/AnimatedSprite.hpp"
 #include "renderer/Renderer.hpp"
 
 #include "resources/ResourceManager.hpp"
@@ -30,7 +29,21 @@ Game g_game( g_windowSize );
 void onWindowSizeChangedStatic(GLFWwindow* window, int width, int height){
     g_windowSize.x = width;
     g_windowSize.y = height;
-    glViewport(0, 0, g_windowSize.x, g_windowSize.y);
+    const float aspect_ratio = 13.0f /14.0f;
+    GLint viewPortWidth = g_windowSize.x;
+    GLint viewPortHeight = g_windowSize.y;
+    GLint viewPortLeftOffset = 0;
+    GLint viewPortBottomOffset = 0;
+
+    if( static_cast<float>( g_windowSize.x ) / g_windowSize.y > aspect_ratio ){
+        viewPortWidth = g_windowSize.y * aspect_ratio;
+        viewPortLeftOffset = (g_windowSize.x - viewPortWidth) * 0.5f;
+    }else{
+        viewPortHeight = g_windowSize.x / aspect_ratio;
+        viewPortBottomOffset = (g_windowSize.y - viewPortHeight) * 0.5f;
+    }
+
+    glViewport( viewPortLeftOffset, viewPortBottomOffset, viewPortWidth, viewPortHeight);
 }
 
 bool isEagle = false;

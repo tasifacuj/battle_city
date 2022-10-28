@@ -12,7 +12,7 @@ void BrickWall::update( size_t /*deltaT*/ )
 }
 
 void BrickWall::render() const{
-    spritePtr_->render( position_, size_, rotationAngle_ );
+    spritePtr_->render( position_, size_, rotationAngle_, 0 );
 }
 
 }//namespace game
