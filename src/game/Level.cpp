@@ -1,6 +1,7 @@
 #include "Level.hpp"
 #include "objects/GameObjectInterface.hpp"
 #include "objects/BrickWall.hpp"
+#include "objects/BetonWall.hpp"
 #include "../resources/ResourceManager.hpp"
 
 // std
@@ -20,6 +21,12 @@ static std::shared_ptr< game::GameObjectInterface > makeGameObject( char objectT
     case 'H': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::BOTTOM_RIGHT, pos, sz, angle );
     case 'I': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::TOP_LEFT, pos, sz, angle );
     case 'J': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::TOP_RIGHT, pos, sz, angle );
+
+    case '5': return std::make_shared< game::BetonWall >( game::BetonWall::WallType::RIGHT, pos, sz, angle );
+    case '6': return std::make_shared< game::BetonWall >( game::BetonWall::WallType::BOTTOM, pos, sz, angle );
+    case '7': return std::make_shared< game::BetonWall >( game::BetonWall::WallType::LEFT, pos, sz, angle );
+    case '8': return std::make_shared< game::BetonWall >( game::BetonWall::WallType::TOP, pos, sz, angle );
+    case '9': return std::make_shared< game::BetonWall >( game::BetonWall::WallType::ALL, pos, sz, angle );
     default:
         std::cout << "Unknown map object " << objectType << std::endl;
         return {};

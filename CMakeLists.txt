@@ -37,6 +37,8 @@ add_executable( BattleCity
 	src/game/objects/Tank.hpp
 	src/game/objects/BrickWall.cpp
 	src/game/objects/BrickWall.hpp
+	src/game/objects/BetonWall.cpp
+	src/game/objects/BetonWall.hpp
 )
 
 target_compile_features( ${PROJECT_NAME} PUBLIC cxx_std_17 )
