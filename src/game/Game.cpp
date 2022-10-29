@@ -91,11 +91,11 @@ void Game::update( size_t deltaT ){
 }
 
 void Game::render(){
-    if( level0Ptr_ ){
-        level0Ptr_->render();
-    }
-
     if( tankPtr_ ){
         tankPtr_->render();
+    }
+
+    if( level0Ptr_ ){
+        level0Ptr_->render();
     }
 }

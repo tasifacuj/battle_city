@@ -4,6 +4,7 @@
 
 // std
 #include <memory>
+#include <array>
 
 namespace renderer{
     class Sprite;
@@ -11,12 +12,57 @@ namespace renderer{
 
 namespace game{
     class BrickWall : public GameObject{
-        std::shared_ptr< renderer::Sprite > spritePtr_;
-    public:
-        BrickWall( std::shared_ptr< renderer::Sprite > spritePtr, glm::vec2 const& pos, glm::vec2 const& sz, float angle );
+    public:// == TYPES ==
+        using SpritePtr = std::shared_ptr< renderer::Sprite >;
+        enum class WallType{
+            ALL,
+            TOP,
+            BOTTOM,
+            LEFT,
+            RIGHT,
+            TOP_LEFT,
+            TOP_RIGHT,
+            BOTTOM_LEFT,
+            BOTTOM_RIGHT
+        };
 
+        enum class BrickState{
+            ALL,
+            TOP_LEFT,
+            TOP_RIGHT,
+            TOP,
+            BOTTOM_LRFT,
+            LEFT,
+            TOP_RIGHT_BOTTOM_LEFT,
+            TOP_BOTTOM_LEFT,
+            BOTTOM_RIGHT,
+            TOP_LEFT_BOTTOM_RIGHT,
+            RIGHT,
+            TOP_BOTTOM_RIGHT,
+            BOTTOM,
+            TOP_LEFT_BOTTOM,
+            TOP_RIGHT_BOTTOM,
+            DESTROYED
+        };
+
+        enum BrickLocation{
+            TOP_LEFT,
+            TOP_RIGHT,
+            BOTTOM_LEFT,
+            BOTTOM_RIGHT
+        };
+    private:
+        std::array< BrickState, 4 > currentBrickState_;
+        std::array< SpritePtr, 15 > sprites_;
+        
     public:
+        BrickWall( WallType wallType, glm::vec2 const& pos, glm::vec2 const& sz, float angle );
+
+    public:// == GameObjectInterface ==
         virtual void update( size_t deltaT ) override;
         virtual void render() const override;
+
+    private: // == BrickWall ==
+        void renderBrick( BrickLocation loc )const;
     };
 }
