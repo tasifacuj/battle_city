@@ -4,8 +4,8 @@
 
 namespace game{
 
-Water::Water( glm::vec2 const& pos, glm::vec2 const& size, float angle )
-: GameObject( pos, size, angle )
+Water::Water( glm::vec2 const& pos, glm::vec2 const& size, float angle, float layer )
+: GameObject( pos, size, angle, layer )
 , sprite_( resources::ResourceManager::getInstance().getSprite( "water" ) )
 , animator_( sprite_ )
 {}
@@ -18,7 +18,7 @@ void Water::renderBlock( Location loc )const{
         glm::vec2( size_.x * 0.5f, 0.0f ), // bottom right
     };
 
-    sprite_->render( position_ + offsets[ static_cast<size_t>( loc ) ], size_ * 0.5f, rotationAngle_, animator_.getCurrentFrame() );
+    sprite_->render( position_ + offsets[ static_cast<size_t>( loc ) ], size_ * 0.5f, rotationAngle_, layer_, animator_.getCurrentFrame() );
 }
 
 void Water::update( size_t deltaT ){

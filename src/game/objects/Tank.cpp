@@ -7,8 +7,8 @@ Tank::Tank( std::shared_ptr< renderer::Sprite > spriteTop
         , std::shared_ptr< renderer::Sprite > spriteBottom
         , std::shared_ptr< renderer::Sprite > spriteLeft
         , std::shared_ptr< renderer::Sprite > spriteRight
-        , float spd, glm::vec2 const& pos, glm::vec2 const& size )
-: GameObject( pos, size, 0.0f )
+        , float spd, glm::vec2 const& pos, glm::vec2 const& size, float layer )
+: GameObject( pos, size, 0.0f, layer )
 , orient_( Orienation::Top )
 , spriteTop_( spriteTop )
 , spriteBottom_( spriteBottom )
@@ -54,19 +54,19 @@ void Tank::render()const{
     switch (orient_)
     {
     case Tank::Orienation::Top:
-        spriteTop_->render( position_, size_, rotationAngle_, animatorTop_.getCurrentFrame() );
+        spriteTop_->render( position_, size_, rotationAngle_, layer_ ,  animatorTop_.getCurrentFrame() );
         break;
 
     case Tank::Orienation::Bottom:
-        spriteBottom_->render( position_, size_, rotationAngle_, animatorBottom_.getCurrentFrame() );
+        spriteBottom_->render( position_, size_, rotationAngle_, layer_, animatorBottom_.getCurrentFrame() );
         break;
 
     case Tank::Orienation::Left:
-        spriteLeft_->render( position_, size_, rotationAngle_, animatorLeft_.getCurrentFrame() );
+        spriteLeft_->render( position_, size_, rotationAngle_, layer_, animatorLeft_.getCurrentFrame() );
         break;
 
     case Tank::Orienation::Right:
-        spriteRight_->render( position_, size_, rotationAngle_, animatorRight_.getCurrentFrame() );
+        spriteRight_->render( position_, size_, rotationAngle_, layer_, animatorRight_.getCurrentFrame() );
         break;
     
     default:

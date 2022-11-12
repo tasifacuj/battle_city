@@ -27,7 +27,7 @@ namespace game{
         renderer::SpriteAnimator    animator_;
         
     public:
-        Water( glm::vec2 const& pos, glm::vec2 const& sz, float angle );
+        Water( glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer );
 
     public:// == GameObjectInterface ==
         virtual void update( size_t deltaT ) override;

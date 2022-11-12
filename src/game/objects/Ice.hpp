@@ -25,7 +25,7 @@ namespace game{
         SpritePtr   sprite_;
         
     public:
-        Ice( glm::vec2 const& pos, glm::vec2 const& sz, float angle );
+        Ice( glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer );
 
     public:// == GameObjectInterface ==
         virtual void render() const override;

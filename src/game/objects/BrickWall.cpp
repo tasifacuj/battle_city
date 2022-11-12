@@ -3,8 +3,8 @@
 #include "../../resources/ResourceManager.hpp"
 
 namespace game{
-BrickWall::BrickWall( BrickWall::WallType wallType, glm::vec2 const& pos, glm::vec2 const& sz, float angle )
-: GameObject( pos, sz, angle )
+BrickWall::BrickWall( BrickWall::WallType wallType, glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer )
+: GameObject( pos, sz, angle, layer )
 , currentBrickState_{ BrickState::DESTROYED, BrickState::DESTROYED, BrickState::DESTROYED, BrickState::DESTROYED }{
     resources::ResourceManager& resm = resources::ResourceManager::getInstance();
     sprites_[ static_cast<size_t>( BrickState::ALL ) ]                   = resm.getSprite( "brickWall_All" );
@@ -85,7 +85,7 @@ void BrickWall::renderBrick( BrickWall::BrickLocation loc )const{
     BrickState state = currentBrickState_[ loc ];
 
     if( state != BrickState::DESTROYED ){
-        sprites_[ static_cast<size_t>(state) ]->render( position_ + offsets[ loc ], size_ * 0.5f, rotationAngle_, 0 );
+        sprites_[ static_cast<size_t>(state) ]->render( position_ + offsets[ loc ], size_ * 0.5f, rotationAngle_, layer_, 0 );
     }
 }
 

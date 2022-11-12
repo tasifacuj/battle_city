@@ -68,7 +68,7 @@ Sprite::~Sprite()
 {
 }
 
-void Sprite::render( glm::vec2 const& pos, glm::vec2 const& sz, float angle, size_t frameId ){
+void Sprite::render( glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer, size_t frameId ){
     if( frameId != frameId_ ){
         auto const& fd = frames_[ frameId ];
 
@@ -103,6 +103,8 @@ void Sprite::render( glm::vec2 const& pos, glm::vec2 const& sz, float angle, siz
     model = glm::scale( model, glm::vec3( sz, 1.0f ) );
 
     programPtr_->setMatrix4( "model", model );
+    programPtr_->setFloat( "layer", layer );
+
     glActiveTexture( GL_TEXTURE0 );
     texPtr_->bind();
     // glDrawArrays( GL_TRIANGLES, 0, 6 );

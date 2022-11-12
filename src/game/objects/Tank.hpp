@@ -48,7 +48,8 @@ namespace game{
         , std::shared_ptr< renderer::Sprite > spriteRight
         , float spd
         , glm::vec2 const& pos
-        , glm::vec2 const& zize );
+        , glm::vec2 const& zize
+        , float layer );
 
     public:// == RenderObjectInterface ==
         virtual void render()const override;

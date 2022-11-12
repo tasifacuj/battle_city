@@ -10,5 +10,6 @@ namespace renderer{
         static void draw( VertexArrayObject const& vao, IndexBufferObject const& indices, ShaderProgram const& program );
         static void setClearColor( float r, float g, float b, float alpha );
         static void clear();
+        static void setDepthTest( bool bval );
     };
 }

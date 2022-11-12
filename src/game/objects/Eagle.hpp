@@ -20,7 +20,7 @@ namespace game{
         SpritePtr                   deadsprite_;
         bool                        alive_{true};
     public:
-        Eagle( glm::vec2 const& pos, glm::vec2 const& sz, float angle );
+        Eagle( glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer );
 
     public:// == GameObjectInterface ==
         virtual void render() const override;

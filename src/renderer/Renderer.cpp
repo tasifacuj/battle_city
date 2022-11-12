@@ -18,7 +18,12 @@ void Renderer::setClearColor( float r, float g, float b, float alpha ){
 }
 
 void Renderer::clear(){
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+}
+
+void Renderer::setDepthTest( bool bval ){
+    if( bval ) glEnable( GL_DEPTH_TEST );
+    else glDisable( GL_DEPTH_TEST );
 }
 
 }

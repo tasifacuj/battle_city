@@ -28,6 +28,7 @@ namespace renderer{
         void use();
     public:// == uniforms ==
         void setInt( std::string const& name, GLint value );
+        void setFloat( std::string const& name, GLfloat value );
         void setMatrix4( std::string const& matName, glm::mat4 const& m );
     private:
         bool createShader( std::string const& shaderText, GLenum type, GLuint& shaderId );

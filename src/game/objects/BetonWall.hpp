@@ -42,7 +42,7 @@ namespace game{
         SpritePtr               sprite_;
         
     public:
-        BetonWall( WallType wallType, glm::vec2 const& pos, glm::vec2 const& sz, float angle );
+        BetonWall( WallType wallType, glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer );
 
     public:// == GameObjectInterface ==
         virtual void update( size_t deltaT ) override;

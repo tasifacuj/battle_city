@@ -16,11 +16,13 @@ namespace game{
         glm::vec2   position_;
         glm::vec2   size_;
         float       rotationAngle_;
+        float       layer_{ 0.0f };
     public:
-        GameObject( glm::vec2 const& pos, glm::vec2 const& sz, float angle )
+        GameObject( glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer )
         : position_( pos )
         , size_( sz )
         , rotationAngle_( angle )
+        , layer_( layer )
         {}
 
         GameObject( GameObject const& ) = delete;

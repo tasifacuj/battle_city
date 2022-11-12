@@ -57,7 +57,8 @@ bool Game::initialize(){
             , resourceManager.getSprite( "tankSprite_right" )
             , 0.00000006f
             , glm::vec2( 0.0f, 0.0f )
-            , glm::vec2( 16.0f, 16.0f ) );
+            , glm::vec2( 16.0f, 16.0f )
+            , 0.0f );
         level0Ptr_ = std::make_unique< game::Level >( resourceManager.getLevels()[1] );
     }
 

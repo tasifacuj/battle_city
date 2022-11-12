@@ -89,6 +89,7 @@ int main( int argc, char** argv ){
     std::cout << "Opengl " <<  GLVersion.major << "." << GLVersion.minor << std::endl;
     std::cout << "Renerer: " << glGetString(GL_RENDERER) << std::endl;
     renderer::Renderer::setClearColor( 0, 0, 0, 1 );
+    renderer::Renderer::setDepthTest( true );
     
     {
         resources::ResourceManager& resourceManager = resources::ResourceManager::getInstance();

@@ -3,8 +3,8 @@
 #include "../../resources/ResourceManager.hpp"
 
 namespace game{
-BetonWall::BetonWall( BetonWall::WallType wallType, glm::vec2 const& pos, glm::vec2 const& sz, float angle )
-: GameObject( pos, sz, angle )
+BetonWall::BetonWall( BetonWall::WallType wallType, glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer )
+: GameObject( pos, sz, angle, layer )
 , currentState_{ State::DESTROYED, State::DESTROYED, State::DESTROYED, State::DESTROYED }{
     resources::ResourceManager& resm = resources::ResourceManager::getInstance();
     sprite_ = resm.getSprite( "betonWall" );
@@ -72,7 +72,7 @@ void BetonWall::renderBrick( BetonWall::Location loc )const{
     State state = currentState_[ loc ];
 
     if( state != State::DESTROYED ){
-        sprite_->render( position_ + offsets[ loc ], size_ * 0.5f, rotationAngle_, 0 );
+        sprite_->render( position_ + offsets[ loc ], size_ * 0.5f, rotationAngle_, layer_, 0 );
     }
 }
 

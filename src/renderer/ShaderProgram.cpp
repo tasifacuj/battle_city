@@ -80,4 +80,8 @@ void ShaderProgram::setMatrix4( std::string const& matName, glm::mat4 const& m )
     glUniformMatrix4fv( glGetUniformLocation( id_, matName.c_str() ), 1, GL_FALSE, glm::value_ptr( m ) );
 }
 
+void ShaderProgram::setFloat( std::string const& name, GLfloat value ){
+    glUniform1f( glGetUniformLocation( id_, name.c_str() ), value );
+}
+
 }// namespace renderer  

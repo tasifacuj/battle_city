@@ -56,7 +56,7 @@ namespace game{
         std::array< SpritePtr, 15 > sprites_;
         
     public:
-        BrickWall( WallType wallType, glm::vec2 const& pos, glm::vec2 const& sz, float angle );
+        BrickWall( WallType wallType, glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer );
 
     public:// == GameObjectInterface ==
         virtual void update( size_t deltaT ) override;

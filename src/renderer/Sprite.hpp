@@ -47,7 +47,7 @@ namespace renderer{
         virtual ~Sprite();
     
     public:// == METHODS ==
-        virtual void render( glm::vec2 const& pos, glm::vec2 const& sz, float angle, size_t frameId );
+        virtual void render( glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer, size_t frameId );
 
         size_t getFrameDuration( size_t frameId )const{
             return frames_[ frameId ].duration;
