@@ -3,6 +3,10 @@
 #include "objects/BrickWall.hpp"
 #include "objects/BetonWall.hpp"
 #include "../resources/ResourceManager.hpp"
+#include "objects/Trees.hpp"
+#include "objects/Ice.hpp"
+#include "objects/Water.hpp"
+#include "objects/Eagle.hpp"
 
 // std
 #include <iostream>
@@ -17,16 +21,21 @@ static std::shared_ptr< game::GameObjectInterface > makeGameObject( char objectT
     case '2': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::LEFT, pos, sz, angle );
     case '3': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::TOP, pos, sz, angle );
     case '4': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::ALL, pos, sz, angle );
-    case 'G': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::BOTTOM_LEFT, pos, sz, angle );
-    case 'H': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::BOTTOM_RIGHT, pos, sz, angle );
-    case 'I': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::TOP_LEFT, pos, sz, angle );
-    case 'J': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::TOP_RIGHT, pos, sz, angle );
-
     case '5': return std::make_shared< game::BetonWall >( game::BetonWall::WallType::RIGHT, pos, sz, angle );
     case '6': return std::make_shared< game::BetonWall >( game::BetonWall::WallType::BOTTOM, pos, sz, angle );
     case '7': return std::make_shared< game::BetonWall >( game::BetonWall::WallType::LEFT, pos, sz, angle );
     case '8': return std::make_shared< game::BetonWall >( game::BetonWall::WallType::TOP, pos, sz, angle );
     case '9': return std::make_shared< game::BetonWall >( game::BetonWall::WallType::ALL, pos, sz, angle );
+
+    case 'A': return std::make_shared< game::Water >( pos, sz, angle );
+    case 'B': return std::make_shared< game::Trees >( pos, sz, angle );
+    case 'C': return std::make_shared< game::Ice >( pos, sz, angle );
+    case 'E': return std::make_shared< game::Eagle >( pos, sz, angle );
+
+    case 'G': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::BOTTOM_LEFT, pos, sz, angle );
+    case 'H': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::BOTTOM_RIGHT, pos, sz, angle );
+    case 'I': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::TOP_LEFT, pos, sz, angle );
+    case 'J': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::TOP_RIGHT, pos, sz, angle );
     default:
         std::cout << "Unknown map object " << objectType << std::endl;
         return {};

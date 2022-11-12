@@ -27,5 +27,7 @@ namespace game{
         GameObject& operator =( GameObject const& ) = delete;
 
         virtual ~GameObject(){}
+
+        virtual void update( size_t /*deltaT*/ ) override{}
     };
 }
