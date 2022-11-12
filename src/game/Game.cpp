@@ -40,7 +40,9 @@ bool Game::initialize(){
         return false;
     }
 
-
+    level0Ptr_ = std::make_unique< game::Level >( resourceManager.getLevels()[2] );
+    windowSize_.x = static_cast<int>( level0Ptr_->width() );
+    windowSize_.y = static_cast<int>( level0Ptr_->height() );
     glm::mat4 projMatrix = glm::ortho( 0.0f, float( windowSize_.x ), 0.0f, float( windowSize_.y ), -100.0f, 100.0f );
     spriteProgramPtr->use();
         spriteProgramPtr->setInt( "sampler", 0 );
@@ -59,7 +61,7 @@ bool Game::initialize(){
             , glm::vec2( 0.0f, 0.0f )
             , glm::vec2( 16.0f, 16.0f )
             , 0.0f );
-        level0Ptr_ = std::make_unique< game::Level >( resourceManager.getLevels()[1] );
+        
     }
 
     return true;
@@ -99,4 +101,12 @@ void Game::render(){
     if( level0Ptr_ ){
         level0Ptr_->render();
     }
+}
+
+size_t Game::currentLevelWidth()const{
+    return level0Ptr_->width();
+}
+
+size_t Game::currentLevelHeight()const{
+    return level0Ptr_->height();
 }

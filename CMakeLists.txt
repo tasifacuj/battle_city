@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 set( PROJECT_NAME BattleCity )
 project(${PROJECT_NAME})
 
@@ -39,6 +39,16 @@ add_executable( BattleCity
 	src/game/objects/BrickWall.hpp
 	src/game/objects/BetonWall.cpp
 	src/game/objects/BetonWall.hpp
+	src/game/objects/Trees.cpp
+	src/game/objects/Trees.hpp
+	src/game/objects/Ice.cpp
+	src/game/objects/Ice.hpp
+	src/game/objects/Water.cpp
+	src/game/objects/Water.hpp
+	src/game/objects/Eagle.cpp
+	src/game/objects/Eagle.hpp
+	src/game/objects/Border.cpp
+	src/game/objects/Border.hpp
 )
 
 target_compile_features( ${PROJECT_NAME} PUBLIC cxx_std_17 )

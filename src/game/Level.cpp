@@ -7,11 +7,11 @@
 #include "objects/Ice.hpp"
 #include "objects/Water.hpp"
 #include "objects/Eagle.hpp"
-
+#include "objects/Border.hpp"
 // std
 #include <iostream>
 
-static const unsigned TILE_SIZE = 16;
+
 
 static std::shared_ptr< game::GameObjectInterface > makeGameObject( char objectType, glm::vec2 const& pos, glm::vec2 const& sz, float angle  ){
     switch ( objectType )
@@ -52,11 +52,11 @@ Level::Level( std::vector< std::string > const& levelDescr ){
 
     width_ = levelDescr[0].size();
     height_ = levelDescr.size();
-    mapObjects_.reserve( width_ * height_ );
-    unsigned bottomOffset = TILE_SIZE * ( height_ - 1 );
+    mapObjects_.reserve( width_ * height_ + 4 );
+    unsigned bottomOffset = TILE_SIZE * ( height_ - 1 ) + TILE_SIZE * 0.5f;
 
     for( auto const& row : levelDescr ){
-        unsigned leftOffset = 0;
+        unsigned leftOffset = TILE_SIZE;
 
         for( char elem : row ){
             mapObjects_.emplace_back( makeGameObject( elem, glm::vec2( leftOffset, bottomOffset ), glm::vec2( TILE_SIZE, TILE_SIZE ), 0.0f ) );
@@ -66,6 +66,14 @@ Level::Level( std::vector< std::string > const& levelDescr ){
         bottomOffset -= TILE_SIZE;
     }
 
+    // bottom
+    mapObjects_.emplace_back( std::make_shared< game::Border >( glm::vec2( TILE_SIZE, 0 ), glm::vec2( width_ * TILE_SIZE, 0.5f * TILE_SIZE ), 0.0f, 0.0f ) );
+    // top
+    mapObjects_.emplace_back( std::make_shared< game::Border >( glm::vec2( TILE_SIZE, TILE_SIZE * height_ + 0.5f * TILE_SIZE ), glm::vec2( width_ * TILE_SIZE, 0.5f * TILE_SIZE ), 0.0f, 0.0f ) );
+    // left
+    mapObjects_.emplace_back( std::make_shared< game::Border >( glm::vec2( 0.0f, 0.0f ), glm::vec2( TILE_SIZE, TILE_SIZE * ( height_ + 1 ) ), 0.0f, 0.0f ) );
+    // right
+    mapObjects_.emplace_back( std::make_shared< game::Border >( glm::vec2( ( width_ + 1 ) * TILE_SIZE, 0.0f ), glm::vec2( 2 * TILE_SIZE, TILE_SIZE * ( height_ + 1 ) ), 0.0f, 0.0f ) );
 }
 
 void Level::update( size_t deltaT ){

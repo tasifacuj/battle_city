@@ -38,4 +38,7 @@ public:
         keys_.at( key ) = action;
     }
     bool initialize();
+
+    size_t currentLevelWidth()const;
+    size_t currentLevelHeight()const;
 };

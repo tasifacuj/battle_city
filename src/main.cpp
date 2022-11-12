@@ -29,7 +29,8 @@ Game g_game( g_windowSize );
 void onWindowSizeChangedStatic(GLFWwindow* window, int width, int height){
     g_windowSize.x = width;
     g_windowSize.y = height;
-    const float aspect_ratio = 13.0f /14.0f;
+    // const float aspect_ratio = 13.0f /14.0f;
+    const float aspect_ratio = static_cast< float >( g_game.currentLevelWidth() ) / static_cast< float > ( g_game.currentLevelHeight() );
     GLint viewPortWidth = g_windowSize.x;
     GLint viewPortHeight = g_windowSize.y;
     GLint viewPortLeftOffset = 0;
@@ -100,6 +101,7 @@ int main( int argc, char** argv ){
             return -1;
         }
         
+        glfwSetWindowSize( window, g_game.currentLevelWidth(), g_game.currentLevelHeight() );
         auto lastTime = std::chrono::high_resolution_clock::now();
 
         /* Loop until the user closes the window */

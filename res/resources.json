@@ -53,9 +53,9 @@
 				"water3",
 				
 				"betonWall",
-				"wall",
+				"trees",
 				"ice",
-				"wall",
+				"border",
 				"bullet",
 				"nothing"
 			]
@@ -122,7 +122,49 @@
 				"D4D4DH1GD4D4D",
 				"DDDDD0E2DDDDD"
             ]
-        }
+        },
+        {
+			"description" : [
+				"DDDDDDDDDDDDD",
+				"D00D11D22D33D",
+				"D0DD1DD2DD3DD",
+				"DDDDDDDDDDDDD",
+				"D44D55D66D77D",
+				"D4DD5DD6DD7DD",
+				"DDDDDDDDDDDDD",
+				"D88D99DAADBBD",
+				"D8DD9DDADDBDD",
+				"DDDDDDDDDDDDD",
+				"DCCDGGDHHDIID",
+				"DCDDGDDHDDDDD",
+				"DDDDDH1GDDJJD",
+				"DDDDD0E2DDDDD"
+			]
+		},
+        {
+			"description" : [
+				"DDDDDDDDDDDDD",
+				"D00D11D22D33D",
+				"D0DD1DD2DD3DD",
+				"DDDDDDDDDDDDD",
+				"D44D55D66D77D",
+				"D4DD5DD6DD7DD",
+				"DDDDDDDDDDDDD",
+				"D88D99DAADBBD",
+				"D8DD9DDADDBDD",
+				"DDDDDDDDDDDDD",
+                "D88D99DAADBBD",
+				"D8DD9DDADDBDD",
+				"DDDDDDDDDDDDD",
+				"DCCDGGDHHDIID",
+				"DCDDGDDHDDDDD",
+				"DDDDDH1GDDJJD",				
+				"DCCDGGDHHDIID",
+				"DCDDGDDHDDDDD",
+				"DDDDDH1GDDJJD",
+				"DDDDD0E2DDDDD"
+			]
+		}
     ],
     "sprites" : [
         {
@@ -290,6 +332,55 @@
             "textureAtlas"      : "mapTextureAtlas_8x8",
             "shader"            : "spriteShader",
             "initialSubTexture" : "betonWall"
+        },
+        {
+            "name"              : "trees",
+            "textureAtlas"      : "mapTextureAtlas_8x8",
+            "shader"            : "spriteShader",
+            "initialSubTexture" : "trees"
+        },
+        {
+            "name"              : "ice",
+            "textureAtlas"      : "mapTextureAtlas_8x8",
+            "shader"            : "spriteShader",
+            "initialSubTexture" : "ice"
+        },{
+            "name" : "water",
+            "textureAtlas" : "mapTextureAtlas_8x8",
+            "shader" : "spriteShader",
+            "initialSubTexture" : "water1",
+            "frames" : [
+                {
+                    "subTexture" : "water1",
+                    "duration" : 500000000
+                },
+                {
+                    "subTexture" : "water2",
+                    "duration" : 500000000
+                },
+                {
+                    "subTexture" : "water3",
+                    "duration" : 500000000
+                }
+            ]
+        },
+        {
+            "name" : "eagle",
+            "textureAtlas" : "mapTextureAtlas_16x16",
+            "shader" : "spriteShader",
+            "initialSubTexture" : "eagle"
+        },
+        {
+            "name" : "eagle_dead",
+            "textureAtlas" : "mapTextureAtlas_16x16",
+            "shader" : "spriteShader",
+            "initialSubTexture" : "eagle_dead"
+        },
+        {
+            "name"              : "border",
+            "textureAtlas"      : "mapTextureAtlas_8x8",
+            "shader"            : "spriteShader",
+            "initialSubTexture" : "border"
         }
 	]
 }
