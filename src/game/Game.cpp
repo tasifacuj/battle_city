@@ -40,7 +40,7 @@ bool Game::initialize(){
         return false;
     }
 
-    level0Ptr_ = std::make_unique< game::Level >( resourceManager.getLevels()[2] );
+    level0Ptr_ = std::make_unique< game::Level >( resourceManager.getLevels()[1] );
     windowSize_.x = static_cast<int>( level0Ptr_->width() );
     windowSize_.y = static_cast<int>( level0Ptr_->height() );
     glm::mat4 projMatrix = glm::ortho( 0.0f, float( windowSize_.x ), 0.0f, float( windowSize_.y ), -100.0f, 100.0f );
@@ -57,9 +57,9 @@ bool Game::initialize(){
             , resourceManager.getSprite( "tankSprite_bottom" )
             , resourceManager.getSprite( "tankSprite_left" )
             , resourceManager.getSprite( "tankSprite_right" )
-            , 0.00000006f
-            , glm::vec2( 0.0f, 0.0f )
-            , glm::vec2( 16.0f, 16.0f )
+            , 0.05f
+            , level0Ptr_->player1Respawn()
+            , glm::vec2( game::Level::TILE_SIZE, game::Level::TILE_SIZE )
             , 0.0f );
         
     }
@@ -67,7 +67,7 @@ bool Game::initialize(){
     return true;
 }
 
-void Game::update( size_t deltaT ){
+void Game::update( double deltaT ){
     if( level0Ptr_ ){
         level0Ptr_->update( deltaT );
     }

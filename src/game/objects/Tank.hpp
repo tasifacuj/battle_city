@@ -9,6 +9,7 @@
 // project
 #include "GameObjectInterface.hpp"
 #include "../../renderer/SpriteAnimator.hpp"
+#include "../../system/Timer.hpp"
 
 namespace renderer{
     class Sprite;
@@ -24,6 +25,7 @@ namespace game{
             Right
         };
 
+        using SpritePtr = std::shared_ptr< renderer::Sprite >;
     private:
         Orienation                          orient_;
 
@@ -41,6 +43,17 @@ namespace game{
         renderer::SpriteAnimator            animatorLeft_;
         renderer::SpriteAnimator            animatorRight_;
 
+
+        SpritePtr                           spriteRespawn_;
+        renderer::SpriteAnimator            respawnAnimator_;
+        bool                                isSpawning_{ true };
+
+        SpritePtr                           spriteShield_;
+        renderer::SpriteAnimator            shieldAnimator_;
+        bool                                hasShield_{ false };
+
+        sys::Timer                          respawnTimer_;
+        sys::Timer                          shieldTimer_;
     public:// == CTORs ==
         explicit Tank( std::shared_ptr< renderer::Sprite > spriteTop
         , std::shared_ptr< renderer::Sprite > spriteBottom
@@ -53,7 +66,7 @@ namespace game{
 
     public:// == RenderObjectInterface ==
         virtual void render()const override;
-        virtual void update( size_t deltaT ) override;
+        virtual void update( double deltaT ) override;
     
     public:// == Tank ==
         void setOrient( Orienation orient );

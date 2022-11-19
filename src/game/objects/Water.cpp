@@ -21,7 +21,7 @@ void Water::renderBlock( Location loc )const{
     sprite_->render( position_ + offsets[ static_cast<size_t>( loc ) ], size_ * 0.5f, rotationAngle_, layer_, animator_.getCurrentFrame() );
 }
 
-void Water::update( size_t deltaT ){
+void Water::update( double deltaT ){
     animator_.update( deltaT );
 }
 

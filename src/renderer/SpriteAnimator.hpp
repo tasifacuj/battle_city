@@ -9,8 +9,8 @@ namespace renderer{
     class SpriteAnimator{
         std::shared_ptr< Sprite >   spritePtr_;
         size_t                      frame_{0};
-        size_t                      frameDuration_{0};
-        size_t                      animationTime_{0};
+        double                      frameDuration_{0};
+        double                      animationTime_{0};
     public:// == CTOR==
         SpriteAnimator( std::shared_ptr< Sprite > spritePtr );
 
@@ -19,7 +19,7 @@ namespace renderer{
             return frame_;
         }
 
-        void update( size_t deltaT );
+        void update( double deltaT );
 
     };
 }

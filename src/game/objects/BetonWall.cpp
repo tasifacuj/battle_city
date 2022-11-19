@@ -50,7 +50,7 @@ BetonWall::BetonWall( BetonWall::WallType wallType, glm::vec2 const& pos, glm::v
     }
 }
 
-void BetonWall::update( size_t /*deltaT*/ )
+void BetonWall::update( double /*deltaT*/ )
 {
 }
 

@@ -63,7 +63,7 @@ BrickWall::BrickWall( BrickWall::WallType wallType, glm::vec2 const& pos, glm::v
     }
 }
 
-void BrickWall::update( size_t /*deltaT*/ )
+void BrickWall::update( double /*deltaT*/ )
 {
 }
 

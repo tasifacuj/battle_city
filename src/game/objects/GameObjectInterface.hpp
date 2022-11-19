@@ -7,7 +7,7 @@ namespace game{
     class GameObjectInterface{
     public:
         virtual ~GameObjectInterface(){}
-        virtual void update( size_t deltaT ) = 0;
+        virtual void update( double deltaT ) = 0;
         virtual void render() const = 0;
     };
 
@@ -30,6 +30,6 @@ namespace game{
 
         virtual ~GameObject(){}
 
-        virtual void update( size_t /*deltaT*/ ) override{}
+        virtual void update( double /*deltaT*/ ) override{}
     };
 }

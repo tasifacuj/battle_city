@@ -1,5 +1,6 @@
 #include "Tank.hpp"
 #include "renderer/Sprite.hpp"
+#include "../../resources/ResourceManager.hpp"
 
 
 namespace game{
@@ -21,12 +22,37 @@ Tank::Tank( std::shared_ptr< renderer::Sprite > spriteTop
 , animatorBottom_( spriteBottom_ )
 , animatorLeft_( spriteLeft_ )
 , animatorRight_( spriteRight_ )
-{
+, spriteRespawn_( resources::ResourceManager::getInstance().getSprite( "respawn" ) )
+, respawnAnimator_( spriteRespawn_ )
+, spriteShield_( resources::ResourceManager::getInstance().getSprite( "shield" ) )
+, shieldAnimator_( spriteShield_ ){
+    respawnTimer_.setCallback( [this](){
+        isSpawning_ = false;
+        hasShield_ = true;
+        shieldTimer_.start( 2000 );
+    } );
+
+    respawnTimer_.start( 1000 );
+
+    shieldTimer_.setCallback( [this](){
+        hasShield_ = false;
+    } );
 }
 
-void Tank::update( size_t deltaT ){
+void Tank::update( double deltaT ){
+    if( isSpawning_ ){
+        respawnAnimator_.update( deltaT );
+        respawnTimer_.update( deltaT );
+        return;
+    }
+
+    if( hasShield_ ){
+        shieldAnimator_.update( deltaT );
+        shieldTimer_.update( deltaT );
+    }
+
     if( isMoving_ ){
-        position_ += deltaT * spd_ * moveOffset_ ;
+        position_ += static_cast< float >( deltaT ) * spd_ * moveOffset_ ;
         
         switch (orient_)
         {
@@ -50,28 +76,36 @@ void Tank::update( size_t deltaT ){
 }
 
 void Tank::render()const{
-    
-    switch (orient_)
-    {
-    case Tank::Orienation::Top:
-        spriteTop_->render( position_, size_, rotationAngle_, layer_ ,  animatorTop_.getCurrentFrame() );
-        break;
+    if( isSpawning_ ){
+        spriteRespawn_->render( position_, size_, rotationAngle_, layer_, respawnAnimator_.getCurrentFrame() );
+    }else{
+        switch (orient_){
+        case Tank::Orienation::Top:
+            spriteTop_->render( position_, size_, rotationAngle_, layer_ ,  animatorTop_.getCurrentFrame() );
+            break;
 
-    case Tank::Orienation::Bottom:
-        spriteBottom_->render( position_, size_, rotationAngle_, layer_, animatorBottom_.getCurrentFrame() );
-        break;
+        case Tank::Orienation::Bottom:
+            spriteBottom_->render( position_, size_, rotationAngle_, layer_, animatorBottom_.getCurrentFrame() );
+            break;
 
-    case Tank::Orienation::Left:
-        spriteLeft_->render( position_, size_, rotationAngle_, layer_, animatorLeft_.getCurrentFrame() );
-        break;
+        case Tank::Orienation::Left:
+            spriteLeft_->render( position_, size_, rotationAngle_, layer_, animatorLeft_.getCurrentFrame() );
+            break;
 
-    case Tank::Orienation::Right:
-        spriteRight_->render( position_, size_, rotationAngle_, layer_, animatorRight_.getCurrentFrame() );
-        break;
-    
-    default:
-        break;
+        case Tank::Orienation::Right:
+            spriteRight_->render( position_, size_, rotationAngle_, layer_, animatorRight_.getCurrentFrame() );
+            break;
+        
+        default:
+            break;
+        }
+
+        if( hasShield_ ){
+            spriteShield_->render( position_, size_, rotationAngle_, layer_, shieldAnimator_.getCurrentFrame() );
+        }
     }
+
+    
 }
 
 void Tank::move( bool m ){

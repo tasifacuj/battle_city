@@ -32,7 +32,7 @@ public:
     Game( glm::ivec2 const& size );
     ~Game();
 
-    void update( size_t deltaT );
+    void update( double deltaT );
     void render();
     void setKey( int key, int action ){
         keys_.at( key ) = action;

@@ -101,7 +101,7 @@ int main( int argc, char** argv ){
             return -1;
         }
         
-        glfwSetWindowSize( window, g_game.currentLevelWidth(), g_game.currentLevelHeight() );
+        glfwSetWindowSize( window, 3*g_game.currentLevelWidth(), 3*g_game.currentLevelHeight() );
         auto lastTime = std::chrono::high_resolution_clock::now();
 
         /* Loop until the user closes the window */
@@ -110,7 +110,7 @@ int main( int argc, char** argv ){
             renderer::Renderer::clear();
             
             auto now = std::chrono::high_resolution_clock::now();
-            size_t duration = std::chrono::duration_cast< std::chrono::nanoseconds >( now - lastTime ).count();
+            double duration = std::chrono::duration< double, std::milli >( now - lastTime ).count();
             lastTime = now;
 
             g_game.update( duration );

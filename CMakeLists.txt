@@ -49,6 +49,9 @@ add_executable( BattleCity
 	src/game/objects/Eagle.hpp
 	src/game/objects/Border.cpp
 	src/game/objects/Border.hpp
+
+	src/system/Timer.cpp
+	src/system/Timer.hpp
 )
 
 target_compile_features( ${PROJECT_NAME} PUBLIC cxx_std_17 )

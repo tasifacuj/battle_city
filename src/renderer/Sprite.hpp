@@ -24,7 +24,7 @@ namespace renderer{
         struct FrameDescription{
             glm::vec2   leftBottomUV;//!< texture coord
             glm::vec2   rightTopUV;  //!< texture coord
-            size_t      duration;
+            double      duration;
         };
     protected:// == MEMBERS ==
         std::shared_ptr< Texture2D >    texPtr_;
@@ -49,7 +49,7 @@ namespace renderer{
     public:// == METHODS ==
         virtual void render( glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer, size_t frameId );
 
-        size_t getFrameDuration( size_t frameId )const{
+        double getFrameDuration( size_t frameId )const{
             return frames_[ frameId ].duration;
         }
 

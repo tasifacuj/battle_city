@@ -8,7 +8,7 @@ SpriteAnimator::SpriteAnimator( std::shared_ptr< Sprite > spritePtr )
 , frameDuration_( spritePtr->getFrameDuration( 0 ) )
 {}
 
-void SpriteAnimator::update( size_t deltaT ){
+void SpriteAnimator::update( double deltaT ){
     animationTime_ += deltaT;
 
     while( animationTime_ >= frameDuration_ ){

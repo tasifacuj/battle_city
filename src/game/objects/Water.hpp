@@ -30,7 +30,7 @@ namespace game{
         Water( glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer );
 
     public:// == GameObjectInterface ==
-        virtual void update( size_t deltaT ) override;
+        virtual void update( double deltaT ) override;
         virtual void render() const override;
 
     private: // == BrickWall ==

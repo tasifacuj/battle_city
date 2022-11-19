@@ -4,6 +4,10 @@
 #include <vector>
 #include <string>
 #include <memory>
+
+// glm
+#include <glm/vec2.hpp>
+
 namespace game{
     class GameObjectInterface;
 
@@ -11,6 +15,11 @@ namespace game{
         size_t                                                  width_;
         size_t                                                  height_;
         std::vector< std::shared_ptr< GameObjectInterface > >   mapObjects_;
+        glm::ivec2                                              playerRespawn_1_;
+        glm::ivec2                                              playerRespawn_2_;
+        glm::ivec2                                              enemyRespawn_1_;
+        glm::ivec2                                              enemyRespawn_2_;
+        glm::ivec2                                              enemyRespawn_3_;
 
     public:// == CONSTANTS ==
         static constexpr unsigned TILE_SIZE = 16;
@@ -20,7 +29,7 @@ namespace game{
         ~Level() = default;
     
     public:// == Level ==
-        void update( size_t deltaT );
+        void update( double deltaT );
         void render();
         size_t width()const{
             return ( width_ + 3 ) * TILE_SIZE;
@@ -28,6 +37,26 @@ namespace game{
 
         size_t height()const{
             return ( height_ + 1 ) * TILE_SIZE;
+        }
+
+        glm::ivec2 const& player1Respawn()const{
+            return playerRespawn_1_;
+        }
+
+        glm::ivec2 const& player2Respawn()const{
+            return playerRespawn_2_;
+        }
+
+        glm::ivec2 const& enemy1Respawn()const{
+            return enemyRespawn_1_;
+        }
+
+        glm::ivec2 const& enemy2Respawn()const{
+            return enemyRespawn_2_;
+        }
+
+        glm::ivec2 const& enemy3Respawn()const{
+            return enemyRespawn_3_;
         }
     };
 }

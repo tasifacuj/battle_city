@@ -125,7 +125,7 @@
         },
         {
 			"description" : [
-				"DDDDDDDDDDDDD",
+				"MDDDDDNDDDDDO",
 				"D00D11D22D33D",
 				"D0DD1DD2DD3DD",
 				"DDDDDDDDDDDDD",
@@ -138,31 +138,7 @@
 				"DCCDGGDHHDIID",
 				"DCDDGDDHDDDDD",
 				"DDDDDH1GDDJJD",
-				"DDDDD0E2DDDDD"
-			]
-		},
-        {
-			"description" : [
-				"DDDDDDDDDDDDD",
-				"D00D11D22D33D",
-				"D0DD1DD2DD3DD",
-				"DDDDDDDDDDDDD",
-				"D44D55D66D77D",
-				"D4DD5DD6DD7DD",
-				"DDDDDDDDDDDDD",
-				"D88D99DAADBBD",
-				"D8DD9DDADDBDD",
-				"DDDDDDDDDDDDD",
-                "D88D99DAADBBD",
-				"D8DD9DDADDBDD",
-				"DDDDDDDDDDDDD",
-				"DCCDGGDHHDIID",
-				"DCDDGDDHDDDDD",
-				"DDDDDH1GDDJJD",				
-				"DCCDGGDHHDIID",
-				"DCDDGDDHDDDDD",
-				"DDDDDH1GDDJJD",
-				"DDDDD0E2DDDDD"
+				"DDDDK0E2LDDDD"
 			]
 		}
     ],
@@ -268,11 +244,11 @@
 			"frames" : [
                 {
                     "subTexture" : "yellowType1_top1",
-                    "duration"   : 500000000
+                    "duration"   : 500
                 },
                 {
                     "subTexture" : "yellowType1_top2",
-                    "duration"   : 500000000
+                    "duration"   : 500
                 }
             ]
 		},
@@ -285,11 +261,11 @@
 			"frames" : [
                 {
                     "subTexture" : "yellowType1_bottom1",
-                    "duration"   : 500000000
+                    "duration"   : 500
                 },
                 {
                     "subTexture" : "yellowType1_bottom2",
-                    "duration"   : 500000000
+                    "duration"   : 500
                 }
             ]
 		},
@@ -302,11 +278,11 @@
 			"frames" : [
                 {
                     "subTexture" : "yellowType1_left1",
-                    "duration"   : 500000000
+                    "duration"   : 500
                 },
                 {
                     "subTexture" : "yellowType1_left2",
-                    "duration"   : 500000000
+                    "duration"   : 500
                 }
             ]
 		},
@@ -319,11 +295,11 @@
 			"frames" : [
                 {
                     "subTexture" : "yellowType1_right1",
-                    "duration"   : 500000000
+                    "duration"   : 500
                 },
                 {
                     "subTexture" : "yellowType1_right2",
-                    "duration"   : 500000000
+                    "duration"   : 500
                 }
             ]
 		},
@@ -352,15 +328,15 @@
             "frames" : [
                 {
                     "subTexture" : "water1",
-                    "duration" : 500000000
+                    "duration" : 500
                 },
                 {
                     "subTexture" : "water2",
-                    "duration" : 500000000
+                    "duration" : 500
                 },
                 {
                     "subTexture" : "water3",
-                    "duration" : 500000000
+                    "duration" : 500
                 }
             ]
         },
@@ -381,6 +357,53 @@
             "textureAtlas"      : "mapTextureAtlas_8x8",
             "shader"            : "spriteShader",
             "initialSubTexture" : "border"
+        },{
+            "name"              : "respawn",
+            "textureAtlas"      : "mapTextureAtlas_16x16",
+            "shader"            : "spriteShader",
+            "initialSubTexture" : "respawn1",
+            "frames" : [
+                {
+                    "subTexture" : "respawn1",
+                    "duration" : 100
+                },
+                {
+                    "subTexture" : "respawn2",
+                    "duration" : 100
+                },
+                {
+                    "subTexture" : "respawn3",
+                    "duration" : 100
+                },
+                {
+                    "subTexture" : "respawn4",
+                    "duration" : 100
+                },
+                {
+                    "subTexture" : "respawn3",
+                    "duration" : 100
+                },
+                {
+                    "subTexture" : "respawn2",
+                    "duration" : 100
+                }
+            ]
+        },
+        {
+            "name"              : "shield",
+            "textureAtlas"      : "mapTextureAtlas_16x16",
+            "shader"            : "spriteShader",
+            "initialSubTexture" : "shield1",
+            "frames" :[
+                {
+                    "subTexture" : "shield1",
+                    "duration" : 50
+                },
+                {
+                    "subTexture" : "shield2",
+                    "duration" : 50
+                }
+            ]
         }
 	]
 }

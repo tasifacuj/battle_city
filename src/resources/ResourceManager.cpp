@@ -281,7 +281,7 @@ bool ResourceManager::loadJSONResources( std::string const& path ){
 
                     for( const rj::Value& f : framesArray ){
                         std::string subtextureName = f["subTexture"].GetString();
-                        unsigned duration = f[ "duration" ].GetUint();
+                        double duration = f[ "duration" ].GetDouble();
                         auto texAtlasPtr = getTexture( texAtlas );
                         auto subTexCoords = texAtlasPtr->getSubTex( subtextureName );
                         frames.emplace_back( renderer::Sprite::FrameDescription{ subTexCoords.leftBottomUV, subTexCoords.rightTopUV, duration } );
