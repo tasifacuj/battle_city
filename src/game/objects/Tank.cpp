@@ -15,9 +15,7 @@ Tank::Tank( std::shared_ptr< renderer::Sprite > spriteTop
 , spriteBottom_( spriteBottom )
 , spriteLeft_( spriteLeft )
 , spriteRight_( spriteRight )
-, isMoving_( false )
-, moveOffset_( 0.0f, 1.0f )
-, spd_( spd )
+, maxAllowedSpd_( spd )
 , animatorTop_( spriteTop_ )
 , animatorBottom_( spriteBottom_ )
 , animatorLeft_( spriteLeft_ )
@@ -51,9 +49,7 @@ void Tank::update( double deltaT ){
         shieldTimer_.update( deltaT );
     }
 
-    if( isMoving_ ){
-        position_ += static_cast< float >( deltaT ) * spd_ * moveOffset_ ;
-        
+    if( velocity_> 0.0 ){     
         switch (orient_)
         {
         case Orienation::Top:
@@ -101,41 +97,44 @@ void Tank::render()const{
         }
 
         if( hasShield_ ){
-            spriteShield_->render( position_, size_, rotationAngle_, layer_, shieldAnimator_.getCurrentFrame() );
+            spriteShield_->render( position_, size_, rotationAngle_, layer_ + 0.1f, shieldAnimator_.getCurrentFrame() );
         }
     }
 
     
 }
 
-void Tank::move( bool m ){
-    isMoving_ = m;
-}
-
 void Tank::setOrient( Tank::Orienation orient ){
     if( orient_ == orient ) return;
 
     orient_ = orient;
+
     switch (orient_)
     {
     case Tank::Orienation::Top:
-        moveOffset_ = glm::vec2( 0.0f, 1.0f );
+        direction_ = glm::vec2( 0.0f, 1.0f );
         break;
 
     case Tank::Orienation::Bottom:
-        moveOffset_ = glm::vec2( 0.0f, -1.0f );
+        direction_ = glm::vec2( 0.0f, -1.0f );
         break;
 
     case Tank::Orienation::Left:
-        moveOffset_ = glm::vec2( -1.0f, 0.0f );
+        direction_ = glm::vec2( -1.0f, 0.0f );
         break;
 
     case Tank::Orienation::Right:
-        moveOffset_ = glm::vec2( 1.0f, 0.0f );
+        direction_ = glm::vec2( 1.0f, 0.0f );
         break;
     
     default:
         break;
+    }
+}
+
+void Tank::setVelocity( float v ){
+    if( false == isSpawning_ ){
+        GameObject::setVelocity( v );
     }
 }
 

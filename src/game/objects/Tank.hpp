@@ -34,9 +34,7 @@ namespace game{
         std::shared_ptr< renderer::Sprite > spriteLeft_;
         std::shared_ptr< renderer::Sprite > spriteRight_;
         
-        bool                                isMoving_{false};
-        glm::vec2                           moveOffset_;
-        float                               spd_;
+        float                               maxAllowedSpd_;
 
         renderer::SpriteAnimator            animatorTop_;
         renderer::SpriteAnimator            animatorBottom_;
@@ -67,9 +65,12 @@ namespace game{
     public:// == RenderObjectInterface ==
         virtual void render()const override;
         virtual void update( double deltaT ) override;
-    
+        virtual void setVelocity( float v ) override;
     public:// == Tank ==
         void setOrient( Orienation orient );
-        void move( bool move );
+        
+        float getMaxAllowedSpd()const{
+            return maxAllowedSpd_;
+        }
     };
 }

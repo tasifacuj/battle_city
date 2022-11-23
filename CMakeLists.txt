@@ -52,9 +52,13 @@ add_executable( BattleCity
 
 	src/system/Timer.cpp
 	src/system/Timer.hpp
+
+	src/phys/PhysicsEngine.cpp
+	src/phys/PhysicsEngine.hpp
 )
 
 target_compile_features( ${PROJECT_NAME} PUBLIC cxx_std_17 )
+add_compile_definitions( _SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING )
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)

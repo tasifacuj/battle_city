@@ -53,7 +53,7 @@ Level::Level( std::vector< std::string > const& levelDescr ){
     width_ = levelDescr[0].size();
     height_ = levelDescr.size();
     mapObjects_.reserve( width_ * height_ + 4 );
-    unsigned bottomOffset = TILE_SIZE * ( height_ - 1 ) + TILE_SIZE * 0.5f;
+    unsigned bottomOffset = static_cast<unsigned>(TILE_SIZE * ( height_ - 1 ) + TILE_SIZE * 0.5f);
     playerRespawn_1_ = { TILE_SIZE * ( 0.5f * width_ - 1 ), TILE_SIZE * 0.5 };
     playerRespawn_2_ = { TILE_SIZE * ( 0.5f * width_ + 3 ), TILE_SIZE * 0.5 };
     

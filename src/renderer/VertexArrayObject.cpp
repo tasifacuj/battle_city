@@ -29,14 +29,14 @@ void VertexArrayObject::addBuffer( VertexBufferObject const& vbo,  VertexBufferL
     GLbyte* offset = nullptr;
     
     for( size_t i = 0; i < elems.size(); i++ ){
-        GLuint attribIdx = buffersCount_ + i;
+        GLuint attribIdx = buffersCount_ + static_cast<GLuint>(i);
         glEnableVertexAttribArray( attribIdx );
         auto const& elem = elems[i];
-        glVertexAttribPointer( attribIdx, elem.count, elem.type, elem.normalized, layout.stride(), offset );
+        glVertexAttribPointer( attribIdx, elem.count, elem.type, elem.normalized, static_cast<GLsizei>(layout.stride()), offset );
         offset += elem.size;
     }
 
-    buffersCount_ += elems.size();
+    buffersCount_ += static_cast<GLuint>( elems.size() );
 }
 
 }

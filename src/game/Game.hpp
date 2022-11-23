@@ -26,7 +26,7 @@ private:
     std::array< bool, 349 > keys_;
     GameState                       state_{ GameState::ACTIVE };
     glm::ivec2                      windowSize_{ g_windowSizeX, g_windowSizeY };
-    std::unique_ptr< game::Tank >   tankPtr_;
+    std::shared_ptr< game::Tank >   tankPtr_;
     std::unique_ptr< game::Level >  level0Ptr_;
 public:
     Game( glm::ivec2 const& size );

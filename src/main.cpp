@@ -12,9 +12,9 @@
 #include "renderer/Texture2D.hpp"
 #include "renderer/Sprite.hpp"
 #include "renderer/Renderer.hpp"
-
 #include "resources/ResourceManager.hpp"
 #include "game/Game.hpp"
+#include "phys/PhysicsEngine.hpp"
 
 // glm
 #include "glm/glm.hpp"
@@ -37,11 +37,11 @@ void onWindowSizeChangedStatic(GLFWwindow* window, int width, int height){
     GLint viewPortBottomOffset = 0;
 
     if( static_cast<float>( g_windowSize.x ) / g_windowSize.y > aspect_ratio ){
-        viewPortWidth = g_windowSize.y * aspect_ratio;
-        viewPortLeftOffset = (g_windowSize.x - viewPortWidth) * 0.5f;
+        viewPortWidth = static_cast<int>( g_windowSize.y * aspect_ratio );
+        viewPortLeftOffset = static_cast<int>( (g_windowSize.x - viewPortWidth) * 0.5f );
     }else{
-        viewPortHeight = g_windowSize.x / aspect_ratio;
-        viewPortBottomOffset = (g_windowSize.y - viewPortHeight) * 0.5f;
+        viewPortHeight = static_cast< int >( g_windowSize.x / aspect_ratio );
+        viewPortBottomOffset = static_cast<int>((g_windowSize.y - viewPortHeight) * 0.5f);
     }
 
     glViewport( viewPortLeftOffset, viewPortBottomOffset, viewPortWidth, viewPortHeight);
@@ -101,7 +101,9 @@ int main( int argc, char** argv ){
             return -1;
         }
         
-        glfwSetWindowSize( window, 3*g_game.currentLevelWidth(), 3*g_game.currentLevelHeight() );
+        phys::PhysicsEngine& ph = phys::PhysicsEngine::getInstance();
+        ph.init();
+        glfwSetWindowSize( window, static_cast<int>(3*g_game.currentLevelWidth()), static_cast<int>(3*g_game.currentLevelHeight()) );
         auto lastTime = std::chrono::high_resolution_clock::now();
 
         /* Loop until the user closes the window */
@@ -114,6 +116,7 @@ int main( int argc, char** argv ){
             lastTime = now;
 
             g_game.update( duration );
+            ph.update( duration );
             g_game.render();
 
             /* Swap front and back buffers */

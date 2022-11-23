@@ -5,6 +5,7 @@
 #include "../resources/ResourceManager.hpp"
 #include "objects/Tank.hpp"
 #include "Level.hpp"
+#include "../phys/PhysicsEngine.hpp"
 
 // std
 #include <iostream>
@@ -52,7 +53,7 @@ bool Game::initialize(){
     {// tank
        
         // tankSpritePtr->setState( "tankTopState" );
-        tankPtr_ = std::make_unique< game::Tank >( 
+        tankPtr_ = std::make_shared< game::Tank >( 
             resourceManager.getSprite( "tankSprite_top" )
             , resourceManager.getSprite( "tankSprite_bottom" )
             , resourceManager.getSprite( "tankSprite_left" )
@@ -64,6 +65,7 @@ bool Game::initialize(){
         
     }
 
+    phys::PhysicsEngine::getInstance().add( tankPtr_ );
     return true;
 }
 
@@ -75,18 +77,18 @@ void Game::update( double deltaT ){
     if( tankPtr_ ){
         if( keys_[ GLFW_KEY_W ] ){
             tankPtr_->setOrient( game::Tank::Orienation::Top );
-            tankPtr_->move( true );
+            tankPtr_->setVelocity( tankPtr_->getMaxAllowedSpd() );
         }else if( keys_[ GLFW_KEY_A ] ){
             tankPtr_->setOrient( game::Tank::Orienation::Left );
-            tankPtr_->move( true );
+            tankPtr_->setVelocity( tankPtr_->getMaxAllowedSpd() );
         }else if( keys_[ GLFW_KEY_S ] ){
             tankPtr_->setOrient( game::Tank::Orienation::Bottom );
-            tankPtr_->move( true );
+            tankPtr_->setVelocity( tankPtr_->getMaxAllowedSpd() );
         }else if( keys_[ GLFW_KEY_D ] ){
             tankPtr_->setOrient( game::Tank::Orienation::Right );
-            tankPtr_->move( true );
+            tankPtr_->setVelocity( tankPtr_->getMaxAllowedSpd() );
         }else{
-            tankPtr_->move( false );
+            tankPtr_->setVelocity( 0.0f );
         }
 
         tankPtr_->update( deltaT );
