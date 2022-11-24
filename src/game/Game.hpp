@@ -27,7 +27,7 @@ private:
     GameState                       state_{ GameState::ACTIVE };
     glm::ivec2                      windowSize_{ g_windowSizeX, g_windowSizeY };
     std::shared_ptr< game::Tank >   tankPtr_;
-    std::unique_ptr< game::Level >  level0Ptr_;
+    std::shared_ptr< game::Level >  level0Ptr_;
 public:
     Game( glm::ivec2 const& size );
     ~Game();

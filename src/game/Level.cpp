@@ -10,8 +10,8 @@
 #include "objects/Border.hpp"
 // std
 #include <iostream>
-
-
+#include <algorithm>
+#include <cmath>
 
 static std::shared_ptr< game::GameObjectInterface > makeGameObject( char objectType, glm::vec2 const& pos, glm::vec2 const& sz, float angle  ){
     switch ( objectType )
@@ -52,6 +52,8 @@ Level::Level( std::vector< std::string > const& levelDescr ){
 
     width_ = levelDescr[0].size();
     height_ = levelDescr.size();
+    widthPixels_ = static_cast<unsigned>( width_ * TILE_SIZE );
+    heightPixels_ = static_cast<unsigned>(height_ * TILE_SIZE);
     mapObjects_.reserve( width_ * height_ + 4 );
     unsigned bottomOffset = static_cast<unsigned>(TILE_SIZE * ( height_ - 1 ) + TILE_SIZE * 0.5f);
     playerRespawn_1_ = { TILE_SIZE * ( 0.5f * width_ - 1 ), TILE_SIZE * 0.5 };
@@ -100,6 +102,7 @@ Level::Level( std::vector< std::string > const& levelDescr ){
     mapObjects_.emplace_back( std::make_shared< game::Border >( glm::vec2( 0.0f, 0.0f ), glm::vec2( TILE_SIZE, TILE_SIZE * ( height_ + 1 ) ), 0.0f, 0.0f ) );
     // right
     mapObjects_.emplace_back( std::make_shared< game::Border >( glm::vec2( ( width_ + 1 ) * TILE_SIZE, 0.0f ), glm::vec2( 2 * TILE_SIZE, TILE_SIZE * ( height_ + 1 ) ), 0.0f, 0.0f ) );
+    std::cout << "Map objects " << mapObjects_.size() << std::endl;
 }
 
 void Level::update( double deltaT ){
@@ -116,6 +119,42 @@ void Level::render(){
             optr->render();
         }
     }
+}
+
+std::vector< std::shared_ptr< GameObjectInterface > > Level::obectsInArea( glm::vec2 const& bottomLeft, glm::vec2 const& topRight ){
+    // std::cout << "bottomLeft = {" << bottomLeft.x << "," << bottomLeft.y << "}, topRight = {" << topRight.x << "," << topRight.y << "}" << std::endl;
+    glm::vec2 bottomLeftLocal( std::clamp( bottomLeft.x - TILE_SIZE, 0.0f, float(TILE_SIZE * width_) ), 
+                                std::clamp( height_ * TILE_SIZE - bottomLeft.y + TILE_SIZE * 0.5f, 0.0f, float(height_ * TILE_SIZE) ) 
+                            );
+    glm::vec2 topRightLocal( std::clamp( topRight.x - TILE_SIZE, 0.0f, static_cast<float>(widthPixels_) ), 
+                            std::clamp( height_ * TILE_SIZE - topRight.y + TILE_SIZE * 0.5f, 0.0f, static_cast<float>( heightPixels_ ) ) 
+                            );
+    std::vector< std::shared_ptr< GameObjectInterface > > result;
+    size_t startX = static_cast<size_t>( std::floor( bottomLeftLocal.x / TILE_SIZE ) );
+    size_t endX = static_cast<size_t>( std::ceil( topRightLocal.x / TILE_SIZE ) );
+
+    size_t startY = static_cast<size_t>( std::floor( topRightLocal.y / TILE_SIZE ) );
+    size_t endY = static_cast<size_t>( std::ceil( bottomLeftLocal.y / TILE_SIZE ) );
+
+    std::cout 
+    // << "bottomLeftLocal = {" << bottomLeftLocal.x << "," << bottomLeftLocal.y << "}, topRightLocal = {" << topRightLocal.x << "," << topRightLocal.y << "}" << std::endl
+    << "startx = " << startX << ", endX = " << endX << ", startY = " << startY << ", endY = " << endY 
+     << std::endl;
+
+    for( size_t c = startX; c < endX; c++ ){
+        for( size_t r = startY; r < endY; r++ ){
+            size_t idx = r * width_ + c;
+            
+            try{
+                auto o = mapObjects_.at( idx );
+                if( o ) result.push_back( o );
+            }catch( std::exception const& ex ){
+                std::cout << "Level::obectsInArea: " << ex.what() << ", id = " << idx << std::endl;
+            }
+        }
+    }
+    
+    return result;
 }
 
 }// namespace game

@@ -27,35 +27,44 @@ BrickWall::BrickWall( BrickWall::WallType wallType, glm::vec2 const& pos, glm::v
     {
     case WallType::ALL :
         currentBrickState_.fill( BrickState::ALL );
+        colliders_.emplace_back( phys::AABB{glm::vec2(0.0f, 0.0f),  size_} );
         break;
     case WallType::TOP:
         currentBrickState_[BrickLocation::TOP_LEFT] = BrickState::ALL;
         currentBrickState_[BrickLocation::TOP_RIGHT] = BrickState::ALL;
+        colliders_.emplace_back( phys::AABB{glm::vec2(0.0f, size_.y * 0.5f),  size_} );
         break;
     
     case WallType::BOTTOM:
         currentBrickState_[BrickLocation::BOTTOM_LEFT] = BrickState::ALL;
         currentBrickState_[BrickLocation::BOTTOM_RIGHT] = BrickState::ALL;
+        colliders_.emplace_back( phys::AABB{glm::vec2(0.0f, 0.0f),  glm::vec2( size_.x, size_.y * .5f )} );
         break;
     case WallType::LEFT:
         currentBrickState_[BrickLocation::BOTTOM_LEFT] = BrickState::ALL;
         currentBrickState_[BrickLocation::TOP_LEFT] = BrickState::ALL;
+        colliders_.emplace_back( phys::AABB{glm::vec2(0.0f, 0.0f),  glm::vec2( size_.x  * 0.5f, size_.y )} );
         break;
     case WallType::RIGHT:
         currentBrickState_[BrickLocation::TOP_RIGHT] = BrickState::ALL;
         currentBrickState_[BrickLocation::BOTTOM_RIGHT] = BrickState::ALL;
+        colliders_.emplace_back( phys::AABB{glm::vec2( size_.x * 0.5f, 0.0f ),  size_ } );
         break;
     case WallType::TOP_LEFT:
         currentBrickState_[BrickLocation::TOP_LEFT] = BrickState::ALL;
+        colliders_.emplace_back( phys::AABB{glm::vec2( 0.0f, size_.y * 0.5f ),  glm::vec2( size_.x / 2, size_.y ) } );
         break;
     case WallType::TOP_RIGHT:
         currentBrickState_[BrickLocation::TOP_RIGHT] = BrickState::ALL;
+        colliders_.emplace_back( phys::AABB{glm::vec2( size_.x * 0.5f, size_.y * 0.5f ),  size_ } );
         break;
     case WallType::BOTTOM_LEFT:
         currentBrickState_[BrickLocation::BOTTOM_LEFT] = BrickState::ALL;
+        colliders_.emplace_back( phys::AABB{glm::vec2( 0.0f ),  size_ * 0.5f } );
         break;
     case WallType::BOTTOM_RIGHT:
         currentBrickState_[BrickLocation::BOTTOM_RIGHT] = BrickState::ALL;
+        colliders_.emplace_back( phys::AABB{glm::vec2( size_.x * 0.5f, 0.0f ),  glm::vec2( size_.x, size_.y * 0.5f ) } );
         break;
     default:
         assert(0);

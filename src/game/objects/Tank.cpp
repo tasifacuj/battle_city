@@ -35,6 +35,8 @@ Tank::Tank( std::shared_ptr< renderer::Sprite > spriteTop
     shieldTimer_.setCallback( [this](){
         hasShield_ = false;
     } );
+
+    colliders_.emplace_back( phys::AABB{glm::vec2(0.0f, 0.0f),  size_} );
 }
 
 void Tank::update( double deltaT ){

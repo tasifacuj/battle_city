@@ -3,6 +3,12 @@
 // glm
 #include "glm/glm.hpp"
 
+// project
+#include "../../phys/PhysicsEngine.hpp"
+
+// std
+#include <vector>
+
 namespace game{
     class GameObjectInterface{
     public:
@@ -16,16 +22,20 @@ namespace game{
         virtual glm::vec2 getCurrentDirection()const = 0;
         virtual float getCurrentVelocity()const = 0;
         virtual void setVelocity( float v ) = 0;
+
+        virtual std::vector< phys::AABB > const& colliders()const = 0;
+        virtual glm::vec2 const& size()const = 0;
     };
 
     class GameObject : public GameObjectInterface{
     protected:// == MEMBERS ==
-        glm::vec2   position_;
-        glm::vec2   size_;
-        float       rotationAngle_;
-        float       layer_{ 0.0f };
-        glm::vec2   direction_;
-        float       velocity_{0.0f};
+        glm::vec2                   position_;
+        glm::vec2                   size_;
+        float                       rotationAngle_;
+        float                       layer_{ 0.0f };
+        glm::vec2                   direction_;
+        float                       velocity_{0.0f};
+        std::vector< phys::AABB >   colliders_;
     public:
         GameObject( glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer )
         : position_( pos )
@@ -61,6 +71,14 @@ namespace game{
 
         virtual void setVelocity( float v ) override{
             velocity_ = v;
+        }
+
+        virtual std::vector< phys::AABB > const& colliders()const override{
+            return colliders_;
+        }
+
+        virtual glm::vec2 const& size()const override{
+            return size_;
         }
     };
 }

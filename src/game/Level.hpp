@@ -20,6 +20,8 @@ namespace game{
         glm::ivec2                                              enemyRespawn_1_;
         glm::ivec2                                              enemyRespawn_2_;
         glm::ivec2                                              enemyRespawn_3_;
+        unsigned                                                widthPixels_{0};
+        unsigned                                                heightPixels_{0};
 
     public:// == CONSTANTS ==
         static constexpr unsigned TILE_SIZE = 16;
@@ -58,5 +60,7 @@ namespace game{
         glm::ivec2 const& enemy3Respawn()const{
             return enemyRespawn_3_;
         }
+
+        std::vector< std::shared_ptr< GameObjectInterface > > obectsInArea( glm::vec2 const& bottomLeft, glm::vec2 const& topRight );
     };
 }
