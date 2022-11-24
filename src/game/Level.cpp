@@ -70,18 +70,23 @@ Level::Level( std::vector< std::string > const& levelDescr ){
             switch ( elem ){
             case 'K':
                 playerRespawn_1_ = glm::ivec2( leftOffset, bottomOffset );
+                mapObjects_.emplace_back( nullptr );
                 break;
             case 'L':
                 playerRespawn_2_ = glm::ivec2( leftOffset, bottomOffset );
+                mapObjects_.emplace_back( nullptr );
                 break;
             case 'M':
                 enemyRespawn_1_ = glm::ivec2( leftOffset, bottomOffset );
+                mapObjects_.emplace_back( nullptr );
                 break;
             case 'N':
                 enemyRespawn_2_ = glm::ivec2( leftOffset, bottomOffset );
+                mapObjects_.emplace_back( nullptr );
                 break;
             case 'O':
                 enemyRespawn_3_ = glm::ivec2( leftOffset, bottomOffset );
+                mapObjects_.emplace_back( nullptr );
                 break;
             default:
                 mapObjects_.emplace_back( makeGameObject( elem, glm::vec2( leftOffset, bottomOffset ), glm::vec2( TILE_SIZE, TILE_SIZE ), 0.0f ) );
@@ -149,10 +154,15 @@ std::vector< std::shared_ptr< GameObjectInterface > > Level::obectsInArea( glm::
         }
     }
 
-    std::cout 
-    // << "bottomLeftLocal = {" << bottomLeftLocal.x << "," << bottomLeftLocal.y << "}, topRightLocal = {" << topRightLocal.x << "," << topRightLocal.y << "}" << std::endl
-    << "startx = " << startX << ", endX = " << endX << ", startY = " << startY << ", endY = " << endY  << ", found " << result.size()
-     << std::endl;
+    // std::cout 
+    // // << "bottomLeftLocal = {" << bottomLeftLocal.x << "," << bottomLeftLocal.y << "}, topRightLocal = {" << topRightLocal.x << "," << topRightLocal.y << "}" << std::endl
+    // << "startx = " << startX << ", endX = " << endX << ", startY = " << startY << ", endY = " << endY  << ", found " << result.size()
+    //  << std::endl;
+
+    if( startX <= 1 )       result.push_back( mapObjects_[ mapObjects_.size() - 2 ] );
+    if( endX >= width_ )    result.push_back( mapObjects_[ mapObjects_.size() - 1 ] );
+    if( startY <= 1 )       result.push_back( mapObjects_[ mapObjects_.size() - 3 ] );
+    if( endY >= height_ )   result.push_back( mapObjects_[ mapObjects_.size() - 4 ] );
     
     return result;
 }

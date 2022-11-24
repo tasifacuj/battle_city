@@ -7,8 +7,9 @@ namespace game{
 Water::Water( glm::vec2 const& pos, glm::vec2 const& size, float angle, float layer )
 : GameObject( pos, size, angle, layer )
 , sprite_( resources::ResourceManager::getInstance().getSprite( "water" ) )
-, animator_( sprite_ )
-{}
+, animator_( sprite_ ){
+    colliders_.emplace_back( phys::AABB{ glm::vec2( 0.0f ), size_ } );
+}
 
 void Water::renderBlock( Location loc )const{
     static std::array< glm::vec2, 4 > offsets{

@@ -14,35 +14,44 @@ BetonWall::BetonWall( BetonWall::WallType wallType, glm::vec2 const& pos, glm::v
     {
     case WallType::ALL :
         currentState_.fill( State::ENABLED );
+        colliders_.emplace_back( phys::AABB{ glm::vec2(0.0f), size_ } );
         break;
     case WallType::TOP:
         currentState_[Location::TOP_LEFT] = State::ENABLED;
         currentState_[Location::TOP_RIGHT] = State::ENABLED;
+        colliders_.emplace_back( phys::AABB{ glm::vec2(0.0f, size_.y / 2), size_ } );
         break;
     
     case WallType::BOTTOM:
         currentState_[Location::BOTTOM_LEFT] = State::ENABLED;
         currentState_[Location::BOTTOM_RIGHT] = State::ENABLED;
+        colliders_.emplace_back( phys::AABB{ glm::vec2(0.0f), glm::vec2( size_.x, size_.y / 2 ) } );
         break;
     case WallType::LEFT:
         currentState_[Location::BOTTOM_LEFT] = State::ENABLED;
         currentState_[Location::TOP_LEFT] = State::ENABLED;
+        colliders_.emplace_back( phys::AABB{ glm::vec2(0.0f), glm::vec2( size_.x / 2, size_.y ) } );
         break;
     case WallType::RIGHT:
         currentState_[Location::TOP_RIGHT] = State::ENABLED;
         currentState_[Location::BOTTOM_RIGHT] = State::ENABLED;
+        colliders_.emplace_back( phys::AABB{ glm::vec2( size_.x / 2, 0.0f ), size_ } );
         break;
     case WallType::TOP_LEFT:
         currentState_[Location::TOP_LEFT] = State::ENABLED;
+        colliders_.emplace_back( phys::AABB{ glm::vec2( 0.0f, size_.y / 2 ), glm::vec2( size_.x / 2, size_.y ) } );
         break;
     case WallType::TOP_RIGHT:
         currentState_[Location::TOP_RIGHT] = State::ENABLED;
+        colliders_.emplace_back( phys::AABB{ glm::vec2( size_.x / 2, size_.y / 2 ), size_ } );
         break;
     case WallType::BOTTOM_LEFT:
         currentState_[Location::BOTTOM_LEFT] = State::ENABLED;
+        colliders_.emplace_back( phys::AABB{ glm::vec2( 0.0f ), glm::vec2( size_.x / 2, size_.y / 2 ) } );
         break;
     case WallType::BOTTOM_RIGHT:
         currentState_[Location::BOTTOM_RIGHT] = State::ENABLED;
+        colliders_.emplace_back( phys::AABB{ glm::vec2( size_.x / 2, 0.0f ), glm::vec2( size_.x, size_.y / 2 ) } );
         break;
     default:
         assert(0);

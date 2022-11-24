@@ -37,5 +37,10 @@ namespace phys{
         void update( double deltaT );
         void add( std::shared_ptr< game::GameObjectInterface > obj );
         void setLevel( std::shared_ptr< game::Level > levelPtr );
+
+    private:
+        bool hasIntersection( std::vector< AABB > const& lshColliders, glm::vec2 const& lhsPos
+                            , std::vector< AABB > const& rhsColliders, glm::vec2 const& rhsPos
+                            );
     };
 }
