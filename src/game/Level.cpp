@@ -136,11 +136,6 @@ std::vector< std::shared_ptr< GameObjectInterface > > Level::obectsInArea( glm::
     size_t startY = static_cast<size_t>( std::floor( topRightLocal.y / TILE_SIZE ) );
     size_t endY = static_cast<size_t>( std::ceil( bottomLeftLocal.y / TILE_SIZE ) );
 
-    std::cout 
-    // << "bottomLeftLocal = {" << bottomLeftLocal.x << "," << bottomLeftLocal.y << "}, topRightLocal = {" << topRightLocal.x << "," << topRightLocal.y << "}" << std::endl
-    << "startx = " << startX << ", endX = " << endX << ", startY = " << startY << ", endY = " << endY 
-     << std::endl;
-
     for( size_t c = startX; c < endX; c++ ){
         for( size_t r = startY; r < endY; r++ ){
             size_t idx = r * width_ + c;
@@ -153,6 +148,11 @@ std::vector< std::shared_ptr< GameObjectInterface > > Level::obectsInArea( glm::
             }
         }
     }
+
+    std::cout 
+    // << "bottomLeftLocal = {" << bottomLeftLocal.x << "," << bottomLeftLocal.y << "}, topRightLocal = {" << topRightLocal.x << "," << topRightLocal.y << "}" << std::endl
+    << "startx = " << startX << ", endX = " << endX << ", startY = " << startY << ", endY = " << endY  << ", found " << result.size()
+     << std::endl;
     
     return result;
 }
