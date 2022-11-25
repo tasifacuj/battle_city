@@ -93,6 +93,8 @@ void Game::update( double deltaT ){
             tankPtr_->setVelocity( 0.0f );
         }
 
+        if( tankPtr_ && keys_[GLFW_KEY_SPACE  ] ) tankPtr_->fire();
+
         tankPtr_->update( deltaT );
     }
 }

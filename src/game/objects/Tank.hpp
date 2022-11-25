@@ -16,6 +16,8 @@ namespace renderer{
 }
 
 namespace game{
+    class Bullet;
+
     class Tank : public GameObject{
     public:// == TYPES ==
         enum class Orienation{
@@ -52,6 +54,8 @@ namespace game{
 
         sys::Timer                          respawnTimer_;
         sys::Timer                          shieldTimer_;
+
+        std::shared_ptr< Bullet >           bulletPtr_;
     public:// == CTORs ==
         explicit Tank( std::shared_ptr< renderer::Sprite > spriteTop
         , std::shared_ptr< renderer::Sprite > spriteBottom
@@ -72,5 +76,7 @@ namespace game{
         float getMaxAllowedSpd()const{
             return maxAllowedSpd_;
         }
+
+        void fire();
     };
 }

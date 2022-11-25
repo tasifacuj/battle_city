@@ -77,14 +77,16 @@ bool PhysicsEngine::hasIntersection( std::vector< AABB > const& lshColliders, gl
             glm::vec2 rhsBottomLeftWorld = rhs.bottomLeft + rhsPos;
             glm::vec2 rhsTopRightWorld = rhs.topRight + rhsPos;
 
-            if( lhsBottomLeftWorld.x >= rhsTopRightWorld.x ) return false;
-            if( lhsTopRightWorld.x <= rhsBottomLeftWorld.x ) return false;
-            if( lhsBottomLeftWorld.y >= rhsTopRightWorld.y ) return false;
-            if( lhsTopRightWorld.y <= rhsBottomLeftWorld.y ) return false;
+            if( lhsBottomLeftWorld.x >= rhsTopRightWorld.x ) continue;
+            if( lhsTopRightWorld.x <= rhsBottomLeftWorld.x ) continue;
+            if( lhsBottomLeftWorld.y >= rhsTopRightWorld.y ) continue;
+            if( lhsTopRightWorld.y <= rhsBottomLeftWorld.y ) continue;
+
+            return true;
         }
     }
 
-    return true;
+    return false;
 }
 
 }// namespace phys

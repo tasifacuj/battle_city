@@ -1,6 +1,7 @@
 #include "Tank.hpp"
-#include "renderer/Sprite.hpp"
+#include "../../renderer/Sprite.hpp"
 #include "../../resources/ResourceManager.hpp"
+#include "Bullet.hpp"
 
 
 namespace game{
@@ -23,7 +24,8 @@ Tank::Tank( std::shared_ptr< renderer::Sprite > spriteTop
 , spriteRespawn_( resources::ResourceManager::getInstance().getSprite( "respawn" ) )
 , respawnAnimator_( spriteRespawn_ )
 , spriteShield_( resources::ResourceManager::getInstance().getSprite( "shield" ) )
-, shieldAnimator_( spriteShield_ ){
+, shieldAnimator_( spriteShield_ )
+, bulletPtr_( std::make_shared< Bullet >( 0.1f, position_ + size_ / 4.0f, size_ / 2.0f, layer )){
     respawnTimer_.setCallback( [this](){
         isSpawning_ = false;
         hasShield_ = true;
@@ -101,6 +103,8 @@ void Tank::render()const{
         if( hasShield_ ){
             spriteShield_->render( position_, size_, rotationAngle_, layer_ + 0.1f, shieldAnimator_.getCurrentFrame() );
         }
+
+        if( bulletPtr_->isActive() ) bulletPtr_->render();
     }
 
     
@@ -138,6 +142,11 @@ void Tank::setVelocity( float v ){
     if( false == isSpawning_ ){
         GameObject::setVelocity( v );
     }
+}
+
+void Tank::fire(){
+    bulletPtr_->fire( position_ + size_ / 4.0f, direction_ );
+    phys::PhysicsEngine::getInstance().add( bulletPtr_ );
 }
 
 }
