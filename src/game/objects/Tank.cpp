@@ -25,7 +25,8 @@ Tank::Tank( std::shared_ptr< renderer::Sprite > spriteTop
 , respawnAnimator_( spriteRespawn_ )
 , spriteShield_( resources::ResourceManager::getInstance().getSprite( "shield" ) )
 , shieldAnimator_( spriteShield_ )
-, bulletPtr_( std::make_shared< Bullet >( 0.1f, position_ + size_ / 4.0f, size_ / 2.0f, layer )){
+, bulletPtr_( std::make_shared< Bullet >( 0.1f, position_ + size_ / 4.0f, size_ / 2.0f, size_, layer )){
+    isSpawning_ = true;
     respawnTimer_.setCallback( [this](){
         isSpawning_ = false;
         hasShield_ = true;
@@ -43,6 +44,10 @@ Tank::Tank( std::shared_ptr< renderer::Sprite > spriteTop
 }
 
 void Tank::update( double deltaT ){
+    if( bulletPtr_->isActive() ){
+        bulletPtr_->update( deltaT );
+    }
+
     if( isSpawning_ ){
         respawnAnimator_.update( deltaT );
         respawnTimer_.update( deltaT );
@@ -146,7 +151,7 @@ void Tank::setVelocity( float v ){
 }
 
 void Tank::fire(){
-    if( !bulletPtr_->isActive() )
+    if( !isSpawning_ && !bulletPtr_->isActive() )
         bulletPtr_->fire( position_ + size_ / 4.0f, direction_ );
 }
 
