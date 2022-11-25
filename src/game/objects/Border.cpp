@@ -5,7 +5,7 @@
 namespace game{
 
 Border::Border( glm::vec2 const& pos, glm::vec2 const& size, float angle, float layer )
-: GameObject( pos, size, angle, layer )
+: GameObject( ObjectType::BORDER, pos, size, angle, layer )
 , sprite_( resources::ResourceManager::getInstance().getSprite( "border" ) ){
     colliders_.emplace_back( phys::AABB{ glm::vec2( 0.0f ), size_ } );
 }

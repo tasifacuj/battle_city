@@ -4,7 +4,7 @@
 
 namespace game{
 BetonWall::BetonWall( BetonWall::WallType wallType, glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer )
-: GameObject( pos, sz, angle, layer )
+: GameObject( ObjectType::CONCRETE_WALL, pos, sz, angle, layer )
 , currentState_{ State::DESTROYED, State::DESTROYED, State::DESTROYED, State::DESTROYED }{
     resources::ResourceManager& resm = resources::ResourceManager::getInstance();
     sprite_ = resm.getSprite( "betonWall" );

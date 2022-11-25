@@ -5,7 +5,7 @@
 namespace game{
 
 Trees::Trees( glm::vec2 const& pos, glm::vec2 const& size, float angle, float layer )
-: GameObject( pos, size, angle, layer )
+: GameObject( ObjectType::TREES, pos, size, angle, layer )
 , sprite_( resources::ResourceManager::getInstance().getSprite( "trees" ) )
 {}
 

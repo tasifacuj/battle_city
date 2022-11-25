@@ -5,7 +5,7 @@
 namespace game{
 
 Ice::Ice( glm::vec2 const& pos, glm::vec2 const& size, float angle, float layer )
-: GameObject( pos, size, angle, layer )
+: GameObject( ObjectType::ICE, pos, size, angle, layer )
 , sprite_( resources::ResourceManager::getInstance().getSprite( "ice" ) )
 {}
 

@@ -4,7 +4,7 @@
 
 namespace game{
 BrickWall::BrickWall( BrickWall::WallType wallType, glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer )
-: GameObject( pos, sz, angle, layer )
+: GameObject( ObjectType::BRICK_WALL, pos, sz, angle, layer )
 , currentBrickState_{ BrickState::DESTROYED, BrickState::DESTROYED, BrickState::DESTROYED, BrickState::DESTROYED }{
     resources::ResourceManager& resm = resources::ResourceManager::getInstance();
     sprites_[ static_cast<size_t>( BrickState::ALL ) ]                   = resm.getSprite( "brickWall_All" );

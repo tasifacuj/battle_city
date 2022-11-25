@@ -37,12 +37,13 @@ void PhysicsEngine::update( double deltaT ){
             auto const& objectsToCheck = levelPtr_->obectsInArea( newPos, newPos + o->size() );
             bool hasCollision = false;
 
-            for( const auto& o : objectsToCheck ){
-                const auto& ccollidersToCheck = o->colliders();
+            for( const auto& objToCheck : objectsToCheck ){
+                const auto& ccollidersToCheck = objToCheck->colliders();
                 
-                if( !ccollidersToCheck.empty() ){
-                    if( hasIntersection( colliders, newPos, ccollidersToCheck, o->getCurrentPosition() ) ){
+                if( objToCheck->collides( o->objectType() ) && !ccollidersToCheck.empty() ){
+                    if( hasIntersection( colliders, newPos, ccollidersToCheck, objToCheck->getCurrentPosition() ) ){
                         hasCollision = true;
+                        objToCheck->onCollision();// wall
                         break;
                     }
                 }
@@ -51,11 +52,12 @@ void PhysicsEngine::update( double deltaT ){
             if( !hasCollision ){
                 o->setCurrentPosition( newPos );
             }
-            // else{
-            //     // alighn position to multiple of 8 pixels.
-            //     if( dir.x != 0.0f ) o->setCurrentPosition( glm::vec2( pos.x, static_cast< int >( pos.y / 4 + 0.5f ) * 4 ) );
-            //     else if( dir.y != 0.0f ) o->setCurrentPosition( glm::vec2( static_cast< int>( pos.x / 4 + 0.5f ) * 4, pos.y ) );
-            // }
+            else{
+                // alighn position to multiple of 8 pixels.
+                // if( dir.x != 0.0f ) o->setCurrentPosition( glm::vec2( pos.x, static_cast< int >( pos.y / 4 + 0.5f ) * 4 ) );
+                // else if( dir.y != 0.0f ) o->setCurrentPosition( glm::vec2( static_cast< int>( pos.x / 4 + 0.5f ) * 4, pos.y ) );
+                o->onCollision();// bullet
+            }
         }
     }
 }

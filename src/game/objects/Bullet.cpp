@@ -5,16 +5,20 @@
 namespace game{
 
 Bullet::Bullet( double velocity, glm::vec2 const& pos, glm::vec2 const& size, float layer )
-: GameObject( pos, size, 0.0f, layer )
+: GameObject( ObjectType::BULLET, pos, size, 0.0f, layer )
 , spriteTop_( resources::ResourceManager::getInstance().getSprite( "bullet_Top" ) )
 , spriteBottom_( resources::ResourceManager::getInstance().getSprite( "bullet_Bottom" ) )
 , spriteLeft_( resources::ResourceManager::getInstance().getSprite( "bullet_Left" ) )
-, spriteRight_( resources::ResourceManager::getInstance().getSprite( "bullet_Right" ) ){
+, spriteRight_( resources::ResourceManager::getInstance().getSprite( "bullet_Right" ) )
+, maxVelocity_( velocity ){
     setVelocity( float(velocity) );
     colliders_.emplace_back( phys::AABB{ glm::vec2( 0.0f ), size_ }  );
 }
 
 void Bullet::render()const {
+    if( !isActive_ )
+        return;
+
     switch (eOrient_)
     {
     case Orientation::TOP:
@@ -43,6 +47,12 @@ void Bullet::fire( glm::vec2 const& position, glm::vec2 const& dir ){
     else eOrient_ = direction_.x < 0.0f ? Orientation::LEFT : Orientation::RIGHT;
 
     isActive_ = true;
+    setVelocity( maxVelocity_ );
+}
+
+void Bullet::onCollision(){
+    setVelocity( 0.0f );
+    isActive_ = false;
 }
 
 }

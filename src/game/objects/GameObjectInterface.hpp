@@ -11,6 +11,19 @@
 
 namespace game{
     class GameObjectInterface{
+    public:// == TYPES ==
+        enum class ObjectType{
+            CONCRETE_WALL,
+            BORDER,
+            BRICK_WALL,
+            BULLET,
+            EAGLE,
+            ICE,
+            TANK,
+            TREES,
+            WATER,
+            UNKNOWN
+        };
     public:
         virtual ~GameObjectInterface(){}
         virtual void update( double deltaT ) = 0;
@@ -25,6 +38,11 @@ namespace game{
 
         virtual std::vector< phys::AABB > const& colliders()const = 0;
         virtual glm::vec2 const& size()const = 0;
+        virtual bool collides( ObjectType /*type*/ ) = 0;
+
+        virtual void onCollision(){}
+
+        virtual ObjectType objectType()const = 0;
     };
 
     class GameObject : public GameObjectInterface{
@@ -36,14 +54,16 @@ namespace game{
         glm::vec2                   direction_;
         float                       velocity_{0.0f};
         std::vector< phys::AABB >   colliders_;
+        ObjectType                  eType_{ ObjectType::UNKNOWN };
     public:
-        GameObject( glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer )
+        GameObject( ObjectType t, glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer )
         : position_( pos )
         , size_( sz )
         , rotationAngle_( angle )
         , layer_( layer )
         , direction_( 0.0f, 1.0f )
         , velocity_( 0.0f )
+        , eType_( t )
         {}
 
         GameObject( GameObject const& ) = delete;
@@ -79,6 +99,14 @@ namespace game{
 
         virtual glm::vec2 const& size()const override{
             return size_;
+        }
+
+        virtual ObjectType objectType()const override{
+            return eType_;
+        }      
+
+        virtual bool collides( ObjectType /*type*/ ){
+            return true;
         }
     };
 }

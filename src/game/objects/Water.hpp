@@ -32,7 +32,9 @@ namespace game{
     public:// == GameObjectInterface ==
         virtual void update( double deltaT ) override;
         virtual void render() const override;
-
+        virtual bool collides( ObjectType t )override{
+            return t != ObjectType::BULLET;
+        }
     private: // == BrickWall ==
         void renderBlock( Location loc )const;
     };

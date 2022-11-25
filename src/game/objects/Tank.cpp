@@ -10,7 +10,7 @@ Tank::Tank( std::shared_ptr< renderer::Sprite > spriteTop
         , std::shared_ptr< renderer::Sprite > spriteLeft
         , std::shared_ptr< renderer::Sprite > spriteRight
         , float spd, glm::vec2 const& pos, glm::vec2 const& size, float layer )
-: GameObject( pos, size, 0.0f, layer )
+: GameObject( ObjectType::TANK, pos, size, 0.0f, layer )
 , orient_( Orienation::Top )
 , spriteTop_( spriteTop )
 , spriteBottom_( spriteBottom )
@@ -39,6 +39,7 @@ Tank::Tank( std::shared_ptr< renderer::Sprite > spriteTop
     } );
 
     colliders_.emplace_back( phys::AABB{glm::vec2(0.0f, 0.0f),  size_} );
+    phys::PhysicsEngine::getInstance().add( bulletPtr_ );
 }
 
 void Tank::update( double deltaT ){
@@ -145,8 +146,8 @@ void Tank::setVelocity( float v ){
 }
 
 void Tank::fire(){
-    bulletPtr_->fire( position_ + size_ / 4.0f, direction_ );
-    phys::PhysicsEngine::getInstance().add( bulletPtr_ );
+    if( !bulletPtr_->isActive() )
+        bulletPtr_->fire( position_ + size_ / 4.0f, direction_ );
 }
 
 }
