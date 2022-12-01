@@ -10,23 +10,25 @@ Bullet::Bullet( double velocity, glm::vec2 const& pos, glm::vec2 const& size, gl
 , spriteBottom_( resources::ResourceManager::getInstance().getSprite( "bullet_Bottom" ) )
 , spriteLeft_( resources::ResourceManager::getInstance().getSprite( "bullet_Left" ) )
 , spriteRight_( resources::ResourceManager::getInstance().getSprite( "bullet_Right" ) )
-, maxVelocity_( velocity )
+, maxVelocity_( float( velocity ) )
 , spriteExplosion_( resources::ResourceManager::getInstance().getSprite( "explosion" ) )
 , animatorExplosion_( spriteExplosion_ )
 , explosionSize_( exposionSize )
 , explosionOffset_( (explosionSize_ - size_) / 2.0f ){
-    setVelocity( float(velocity) );
-    colliders_.emplace_back( phys::AABB{ glm::vec2( 0.0f ), size_ }  );
+    auto collisionCallback = [this]( GameObjectInterface const& /*rhs == wall or enemy_tank*/ , phys::ECollisionDirection dir ){
+        setVelocity( 0.0f );
+        isExploding_ = true;
+        explosionTimer_.start( animatorExplosion_.getTotalDuration() );
+    };
+    colliders_.emplace_back( glm::vec2( 0.0f ), size_, collisionCallback );
     explosionTimer_.setCallback( [this](){
         isExploding_ = false;
         isActive_ = false;
+        animatorExplosion_.reset();
     } );
 }
 
 void Bullet::render()const {
-    if( !isActive_ )
-        return;
-
     if( isExploding_ ){
         switch( eOrient_ ){
             case Orientation::TOP:
@@ -43,22 +45,24 @@ void Bullet::render()const {
             break;
         }
     }else{
-        switch (eOrient_){
-        case Orientation::TOP:
-            spriteTop_->render( position_, size_, rotationAngle_, layer_, 0 );
-            break;
-        case Orientation::BOTTOM:
-            spriteTop_->render( position_, size_, rotationAngle_, layer_, 0 );
-            break;
-        case Orientation::LEFT:
-            spriteLeft_->render( position_, size_, rotationAngle_, layer_, 0 );
-            break;
-        case Orientation::RIGHT:
-            spriteRight_->render( position_, size_, rotationAngle_, layer_ , 0);
-            break;
-        default:
-            assert( 0 && "never should be here" );
-            break;
+        if( isActive_ ){
+            switch (eOrient_){
+            case Orientation::TOP:
+                spriteTop_->render( position_, size_, rotationAngle_, layer_, 0 );
+                break;
+            case Orientation::BOTTOM:
+                spriteTop_->render( position_, size_, rotationAngle_, layer_, 0 );
+                break;
+            case Orientation::LEFT:
+                spriteLeft_->render( position_, size_, rotationAngle_, layer_, 0 );
+                break;
+            case Orientation::RIGHT:
+                spriteRight_->render( position_, size_, rotationAngle_, layer_ , 0);
+                break;
+            default:
+                assert( 0 && "never should be here" );
+                break;
+            }
         }
     }
 }
@@ -74,12 +78,6 @@ void Bullet::fire( glm::vec2 const& position, glm::vec2 const& dir ){
     setVelocity( maxVelocity_ );
 }
 
-void Bullet::onCollision(){
-    setVelocity( 0.0f );
-    isExploding_ = true;
-    animatorExplosion_.reset();
-    explosionTimer_.start( animatorExplosion_.getTotalDuration() );
-}
 
 void Bullet::update(double deltaT)
 {

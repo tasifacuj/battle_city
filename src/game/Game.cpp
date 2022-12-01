@@ -41,7 +41,7 @@ bool Game::initialize(){
         return false;
     }
 
-    level0Ptr_ = std::make_shared< game::Level >( resourceManager.getLevels()[1] );
+    level0Ptr_ = std::make_shared< game::Level >( resourceManager.getLevels()[ 0 ] );
     auto& pheng = phys::PhysicsEngine::getInstance();
     pheng.setLevel( level0Ptr_ );
     windowSize_.x = static_cast<int>( level0Ptr_->width() );

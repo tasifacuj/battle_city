@@ -16,11 +16,11 @@
 static std::shared_ptr< game::GameObjectInterface > makeGameObject( char objectType, glm::vec2 const& pos, glm::vec2 const& sz, float angle  ){
     switch ( objectType )
     {
-    case '0': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::RIGHT, pos, sz, angle, 0.0f );
-    case '1': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::BOTTOM, pos, sz, angle, 0.0f );
-    case '2': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::LEFT, pos, sz, angle, 0.0f );
-    case '3': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::TOP, pos, sz, angle, 0.0f );
-    case '4': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::ALL, pos, sz, angle, 0.0f );
+    case '0': return std::make_shared< game::BrickWall >( game::BrickWall::EBrickWallType::Right, pos, sz, angle, 0.0f );
+    case '1': return std::make_shared< game::BrickWall >( game::BrickWall::EBrickWallType::Bottom, pos, sz, angle, 0.0f );
+    case '2': return std::make_shared< game::BrickWall >( game::BrickWall::EBrickWallType::Left, pos, sz, angle, 0.0f );
+    case '3': return std::make_shared< game::BrickWall >( game::BrickWall::EBrickWallType::Top, pos, sz, angle, 0.0f );
+    case '4': return std::make_shared< game::BrickWall >( game::BrickWall::EBrickWallType::All, pos, sz, angle, 0.0f );
     case '5': return std::make_shared< game::BetonWall >( game::BetonWall::WallType::RIGHT, pos, sz, angle, 0.0f );
     case '6': return std::make_shared< game::BetonWall >( game::BetonWall::WallType::BOTTOM, pos, sz, angle, 0.0f );
     case '7': return std::make_shared< game::BetonWall >( game::BetonWall::WallType::LEFT, pos, sz, angle, 0.0f );
@@ -32,10 +32,10 @@ static std::shared_ptr< game::GameObjectInterface > makeGameObject( char objectT
     case 'C': return std::make_shared< game::Ice >( pos, sz, angle, -1.0f );
     case 'E': return std::make_shared< game::Eagle >( pos, sz, angle, 0.0f );
 
-    case 'G': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::BOTTOM_LEFT, pos, sz, angle, 0 );
-    case 'H': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::BOTTOM_RIGHT, pos, sz, angle, 0 );
-    case 'I': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::TOP_LEFT, pos, sz, angle, 0 );
-    case 'J': return std::make_shared< game::BrickWall >( game::BrickWall::WallType::TOP_RIGHT, pos, sz, angle, 0 );
+    case 'G': return std::make_shared< game::BrickWall >( game::BrickWall::EBrickWallType::BottomLeft, pos, sz, angle, 0 );
+    case 'H': return std::make_shared< game::BrickWall >( game::BrickWall::EBrickWallType::BottomRight, pos, sz, angle, 0 );
+    case 'I': return std::make_shared< game::BrickWall >( game::BrickWall::EBrickWallType::TopLeft, pos, sz, angle, 0 );
+    case 'J': return std::make_shared< game::BrickWall >( game::BrickWall::EBrickWallType::TopRight, pos, sz, angle, 0 );
     default:
         std::cout << "Unknown map object " << objectType << std::endl;
         return {};
@@ -55,7 +55,8 @@ Level::Level( std::vector< std::string > const& levelDescr ){
     widthPixels_ = static_cast<unsigned>( width_ * TILE_SIZE );
     heightPixels_ = static_cast<unsigned>(height_ * TILE_SIZE);
     mapObjects_.reserve( width_ * height_ + 4 );
-    unsigned bottomOffset = static_cast<unsigned>(TILE_SIZE * ( height_ - 1 ) + TILE_SIZE * 0.5f);
+    unsigned bottomOffset = static_cast<unsigned>(TILE_SIZE * ( height_ - 1 )// left bootom of the highest row
+     + TILE_SIZE * 0.5f);// bottom panel
     playerRespawn_1_ = { TILE_SIZE * ( 0.5f * width_ - 1 ), TILE_SIZE * 0.5 };
     playerRespawn_2_ = { TILE_SIZE * ( 0.5f * width_ + 3 ), TILE_SIZE * 0.5 };
     

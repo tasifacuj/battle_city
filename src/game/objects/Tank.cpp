@@ -25,7 +25,7 @@ Tank::Tank( std::shared_ptr< renderer::Sprite > spriteTop
 , respawnAnimator_( spriteRespawn_ )
 , spriteShield_( resources::ResourceManager::getInstance().getSprite( "shield" ) )
 , shieldAnimator_( spriteShield_ )
-, bulletPtr_( std::make_shared< Bullet >( 0.1f, position_ + size_ / 4.0f, size_ / 2.0f, size_, layer )){
+, bulletPtr_( std::make_shared< Bullet >( 0.1f, position_, size_ / 2.0f, size_, layer )){
     isSpawning_ = true;
     respawnTimer_.setCallback( [this](){
         isSpawning_ = false;

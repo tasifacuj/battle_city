@@ -41,7 +41,6 @@ namespace game{
 
     public:// == GameObjectInterface ==
         virtual void render()const override;
-        virtual void onCollision()override;
         virtual void update( double deltaT ) override;
     public:// == Bullet ==
         bool isActive()const{

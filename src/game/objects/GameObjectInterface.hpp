@@ -36,25 +36,23 @@ namespace game{
         virtual float getCurrentVelocity()const = 0;
         virtual void setVelocity( float v ) = 0;
 
-        virtual std::vector< phys::AABB > const& colliders()const = 0;
+        virtual std::vector< phys::Collider > const& colliders()const = 0;
         virtual glm::vec2 const& size()const = 0;
         virtual bool collides( ObjectType /*type*/ ) = 0;
-
-        virtual void onCollision(){}
 
         virtual ObjectType objectType()const = 0;
     };
 
     class GameObject : public GameObjectInterface{
     protected:// == MEMBERS ==
-        glm::vec2                   position_;
-        glm::vec2                   size_;
-        float                       rotationAngle_;
-        float                       layer_{ 0.0f };
-        glm::vec2                   direction_;
-        float                       velocity_{0.0f};
-        std::vector< phys::AABB >   colliders_;
-        ObjectType                  eType_{ ObjectType::UNKNOWN };
+        glm::vec2                       position_;
+        glm::vec2                       size_;
+        float                           rotationAngle_;
+        float                           layer_{ 0.0f };
+        glm::vec2                       direction_;
+        float                           velocity_{0.0f};
+        std::vector< phys::Collider >   colliders_;
+        ObjectType                      eType_{ ObjectType::UNKNOWN };
     public:
         GameObject( ObjectType t, glm::vec2 const& pos, glm::vec2 const& sz, float angle, float layer )
         : position_( pos )
@@ -93,7 +91,7 @@ namespace game{
             velocity_ = v;
         }
 
-        virtual std::vector< phys::AABB > const& colliders()const override{
+        virtual std::vector< phys::Collider > const& colliders()const override{
             return colliders_;
         }
 
@@ -103,9 +101,9 @@ namespace game{
 
         virtual ObjectType objectType()const override{
             return eType_;
-        }      
+        }
 
-        virtual bool collides( ObjectType /*type*/ ){
+        virtual bool collides( ObjectType /*type*/ )override{
             return true;
         }
     };
