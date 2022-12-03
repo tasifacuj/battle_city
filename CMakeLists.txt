@@ -30,8 +30,6 @@ add_executable( BattleCity
 
 	src/game/Game.cpp
 	src/game/Game.hpp
-	src/game/Level.cpp
-	src/game/Level.hpp
 	src/game/objects/GameObjectInterface.hpp
 	src/game/objects/Tank.cpp
 	src/game/objects/Tank.hpp
@@ -51,6 +49,12 @@ add_executable( BattleCity
 	src/game/objects/Border.hpp
 	src/game/objects/Bullet.cpp
 	src/game/objects/Bullet.hpp
+
+	src/game/states/GameStateInterface.hpp
+	src/game/states/Level.cpp
+	src/game/states/Level.hpp
+	src/game/states/StartScreen.cpp
+	src/game/states/StartScreen.hpp
 
 	src/system/Timer.cpp
 	src/system/Timer.hpp

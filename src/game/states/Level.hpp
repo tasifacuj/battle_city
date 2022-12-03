@@ -8,10 +8,13 @@
 // glm
 #include <glm/vec2.hpp>
 
+// project
+#include "GameStateInterface.hpp"
+
 namespace game{
     class GameObjectInterface;
 
-    class Level{
+    class Level : public GameStateInterface{
         size_t                                                  width_;
         size_t                                                  height_;
         std::vector< std::shared_ptr< GameObjectInterface > >   mapObjects_;
@@ -30,9 +33,13 @@ namespace game{
         Level( Level const& ) = delete;
         ~Level() = default;
     
+    public:// == GameStateInterface ==
+        virtual void update( double deltaT ) override;
+        virtual void render() const override;
+        virtual unsigned int getStateWidth() const override;
+        virtual unsigned int getStateHeight() const override;
+        
     public:// == Level ==
-        void update( double deltaT );
-        void render();
         size_t width()const{
             return ( width_ + 3 ) * TILE_SIZE;
         }

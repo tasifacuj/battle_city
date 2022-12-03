@@ -1,13 +1,13 @@
 #include "Level.hpp"
-#include "objects/GameObjectInterface.hpp"
-#include "objects/BrickWall.hpp"
-#include "objects/BetonWall.hpp"
-#include "../resources/ResourceManager.hpp"
-#include "objects/Trees.hpp"
-#include "objects/Ice.hpp"
-#include "objects/Water.hpp"
-#include "objects/Eagle.hpp"
-#include "objects/Border.hpp"
+#include "game/objects/GameObjectInterface.hpp"
+#include "game/objects/BrickWall.hpp"
+#include "game/objects/BetonWall.hpp"
+#include "resources/ResourceManager.hpp"
+#include "game/objects/Trees.hpp"
+#include "game/objects/Ice.hpp"
+#include "game/objects/Water.hpp"
+#include "game/objects/Eagle.hpp"
+#include "game/objects/Border.hpp"
 // std
 #include <iostream>
 #include <algorithm>
@@ -119,7 +119,7 @@ void Level::update( double deltaT ){
     }
 }
 
-void Level::render(){
+void Level::render()const{
     for( auto optr : mapObjects_ ){
         if( optr ){
             optr->render();
@@ -166,6 +166,14 @@ std::vector< std::shared_ptr< GameObjectInterface > > Level::obectsInArea( glm::
     if( endY >= height_ )   result.push_back( mapObjects_[ mapObjects_.size() - 4 ] );
     
     return result;
+}
+
+unsigned int Level::getStateWidth() const{
+    return static_cast< unsigned >( width() );
+}
+
+unsigned int Level::getStateHeight() const{
+    return static_cast< unsigned >( height() );
 }
 
 }// namespace game

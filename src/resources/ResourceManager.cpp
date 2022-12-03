@@ -293,6 +293,25 @@ bool ResourceManager::loadJSONResources( std::string const& path ){
         }
     }
 
+    {// start screen
+        auto startScreenIt = document.FindMember( "start_screen" );
+
+        if( startScreenIt != document.MemberEnd()){
+            auto descrArray = startScreenIt->value.GetArray();
+            startScreen_.reserve( descrArray.Size() );
+            size_t maxLen = 0;
+
+            for( auto const& row : descrArray ){
+                startScreen_.emplace_back( row.GetString() );
+                if( maxLen < startScreen_.back().size() ) maxLen = startScreen_.back().size();
+            }
+
+            for( auto& row : startScreen_ ){
+                while( row.size() < maxLen ) row.append( 1, 'F' );
+            }
+        }
+    }
+
     return true;
 }
 

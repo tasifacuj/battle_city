@@ -30,11 +30,12 @@ namespace resources{
         using Levels = std::vector< LevelDescription >;
 
     private:// == MEMBERs ==
-        std::string     exePath_;
-        Programs        programs_;
-        TextureMap      textures_;
-        Sprites         sprites_;
-        Levels          levels_;
+        std::string         exePath_;
+        Programs            programs_;
+        TextureMap          textures_;
+        Sprites             sprites_;
+        Levels              levels_;
+        LevelDescription    startScreen_;
     public:// == ctor ==
         ResourceManager() = default;
         ResourceManager( ResourceManager const& ) = delete;
@@ -71,6 +72,10 @@ namespace resources{
 
         Levels const& getLevels()const{
             return levels_;
+        }
+
+        LevelDescription const& getStartScreen()const{
+            return startScreen_;
         }
     private:
         std::string getFileString( std::string const& fpath );

@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "wnd",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "intelliSenseMode": "windows-msvc-x64",
+            "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.29.30133/bin/Hostx64/x64/cl.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "includePath": [
+                "${workspaceFolder:battle_city}",
+                "${workspaceFolder:battle_city}/src",
+                "${workspaceFolder:battle_city}/external",
+                "${workspaceFolder}/external/glm",
+                "${workspaceFolder}/external/glad",
+                "${workspaceFolder}/external/glfw/include",
+                "${workspaceFolder}/external/rapidjson",
+                "${workspaceFolder}/external/rapidjson/include",
+                "${workspaceFolder}/external/glad/include"
+            ]
+        }
+    ],
+    "version": 4
+}
