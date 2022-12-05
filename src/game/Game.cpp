@@ -69,25 +69,28 @@ bool Game::initialize(){
         return false;
     }
 
-    gameStatePtr_ = std::make_shared< game::StartScreen >( resourceManager.getStartScreen() );
+    gameStatePtr_ = std::make_shared< game::StartScreen >( resourceManager.getStartScreen(), *this );
     setWinfowSize( windowSize_ );
 
     return true;
 }
 
 void Game::update( double deltaT ){
-    switch(state_){
-        case GameState::START_SCREEN:
-            if( keys_[ GLFW_KEY_ENTER ] ){
-                state_ = GameState::LEVEL;
-                startNewLevel( 0 );
-            }
-        break;
-        case GameState::LEVEL:
-            gameStatePtr_->processInput( keys_ );
-            gameStatePtr_->update( deltaT );
-        break;
-    }
+    gameStatePtr_->processInput( keys_ );
+    gameStatePtr_->update( deltaT );
+    
+    // switch(state_){
+    //     case GameState::START_SCREEN:
+    //         if( keys_[ GLFW_KEY_ENTER ] ){
+    //             state_ = GameState::LEVEL;
+    //             startNewLevel( 0 );
+    //         }
+    //     break;
+    //     case GameState::LEVEL:
+    //         gameStatePtr_->processInput( keys_ );
+    //         gameStatePtr_->update( deltaT );
+    //     break;
+    // }
 }
 
 void Game::render(){

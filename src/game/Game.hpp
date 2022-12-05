@@ -44,8 +44,7 @@ public:
     size_t currentLevelWidth()const;
     size_t currentLevelHeight()const;
     void setWinfowSize( glm::ivec2 const& size );
-
-private:
     void startNewLevel( size_t levelId );
+private:
     void updateViewPort();
 };

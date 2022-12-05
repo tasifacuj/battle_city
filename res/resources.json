@@ -26,6 +26,15 @@
             ]
         },
         {
+            "name" : "menu_128x64",
+            "filePath" : "res/textures/menu_128x64.png",
+            "subtextureWidth" : 128,
+            "subtextureHeight" : 64,
+            "subtextureNames" : [
+                "menu"
+            ]
+        },
+        {
             "name" 				: "mapTextureAtlas_8x8",
 			"filePath"  		: "res/textures/map_8x8.png",
 			"subtextureWidth"   : 8,
@@ -249,7 +258,12 @@
             "shader"            : "spriteShader",
             "initialSubTexture" : "brickWall_TopRight_Bottom"
         },
-        
+        {
+            "name" : "menu",
+            "textureAtlas" : "menu_128x64",
+            "shader" : "spriteShader",
+            "initialSubTexture" : "menu"
+        },
         {
 			"name" 				: "tankSprite_top",
 			"textureAtlas" 		: "tanksTextureAtlas",

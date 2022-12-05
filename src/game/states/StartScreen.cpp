@@ -1,9 +1,13 @@
 #include "StartScreen.hpp"
 #include "resources/ResourceManager.hpp"
 #include "renderer/Sprite.hpp"
+#include "../Game.hpp"
 
 // std
 #include <stdexcept>
+
+//glfw
+#include "GLFW/glfw3.h"
 
 namespace{
 std::shared_ptr< renderer::Sprite > makeDescriptionSprite( char d ){
@@ -34,13 +38,17 @@ std::shared_ptr< renderer::Sprite > makeDescriptionSprite( char d ){
 
 namespace game{
 
-StartScreen::StartScreen( std::vector< std::string > const& description ){
+StartScreen::StartScreen( std::vector< std::string > const& description, Game& game )
+: menuSprite_( std::make_pair( resources::ResourceManager::getInstance().getSprite( "menu" ), glm::vec2( 11 * BLOCK_SIZE, START_SCREEN_HEIGHT - description.size() * BLOCK_SIZE - MENU_HEIGHT - 5 * BLOCK_SIZE ) ) )
+, tankSprite_( std::make_pair( resources::ResourceManager::getInstance().getSprite( "tankSprite_right" ), glm::vec2( 8 * BLOCK_SIZE, menuSprite_.second.y + 6 * BLOCK_SIZE - currentMenuSelection_ * BLOCK_SIZE * 2 ) ) )
+, tankAnimator_( tankSprite_.first )
+, game_( game ){
     if( description.empty() ){
         throw std::runtime_error( "empty start screen" );
     }
 
-    auto leftOffset = 2 * BLOCK_SIZE;
-    auto bottomOffset = START_SCREEN_HEIGHT - 2 * BLOCK_SIZE;
+    auto leftOffset = 4 * BLOCK_SIZE;
+    auto bottomOffset = START_SCREEN_HEIGHT - 4 * BLOCK_SIZE;
     unsigned currentBottomOffset = bottomOffset;
 
     for( auto const& row : description ){
@@ -68,9 +76,47 @@ void StartScreen::render()const{
             elems.first->render( elems.second, glm::vec2( BLOCK_SIZE ), 0.0f, 0.0f, 0 );
         }
     }
+
+    menuSprite_.first->render( menuSprite_.second, glm::vec2( MENU_WIDTH, MENU_HEIGHT ), 0.0f, 0.0f, 0 );
+    tankSprite_.first->render( glm::vec2( tankSprite_.second.x, tankSprite_.second.y - currentMenuSelection_ * TANK_SIZE ), glm::vec2( TANK_SIZE ), 0.0f, 0.0f, tankAnimator_.getCurrentFrame() );
 }
 
-void StartScreen::update( double /*deltaT*/ )
-{}
+void StartScreen::update( double deltaT ){
+    tankAnimator_.update( deltaT );
+}
+
+void StartScreen::processInput( std::array< bool, 349 > const& keys ){
+    // if( keys[ GLFW_KEY_ENTER ] ){
+    //     state_ = GameState::LEVEL;
+    //     startNewLevel( 0 );
+    // }
+
+    if( !keys[ GLFW_KEY_W ] && !keys[ GLFW_KEY_S ] ) keyWasReleased_ = true;
+
+    if( keyWasReleased_ ){
+        if( keys[ GLFW_KEY_W ] ){
+            keyWasReleased_ = false;
+            currentMenuSelection_ --;
+
+            if( currentMenuSelection_ < 0 ) currentMenuSelection_ = 2;
+        }else if( keys[ GLFW_KEY_S ] ){
+            keyWasReleased_ = false;
+            currentMenuSelection_ ++;
+            if( currentMenuSelection_ > 2 ) currentMenuSelection_ = 0;
+        }
+    }
+
+    if( keys[ GLFW_KEY_ENTER ] ){
+        switch ( currentMenuSelection_ )
+        {
+        case 0:
+            game_.startNewLevel( 0 );
+            break;
+        
+        default:
+            break;
+        }
+    }
+}
 
 }
