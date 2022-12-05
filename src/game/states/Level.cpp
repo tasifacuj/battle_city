@@ -8,10 +8,15 @@
 #include "game/objects/Water.hpp"
 #include "game/objects/Eagle.hpp"
 #include "game/objects/Border.hpp"
+#include "game/objects/Tank.hpp"
+
 // std
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+
+//glfw
+#include "GLFW/glfw3.h"
 
 static std::shared_ptr< game::GameObjectInterface > makeGameObject( char objectType, glm::vec2 const& pos, glm::vec2 const& sz, float angle  ){
     switch ( objectType )
@@ -112,6 +117,8 @@ Level::Level( std::vector< std::string > const& levelDescr ){
 }
 
 void Level::update( double deltaT ){
+    tankPtr_->update( deltaT );
+
     for( auto optr : mapObjects_ ){
         if( optr ){
             optr->update( deltaT );
@@ -119,7 +126,46 @@ void Level::update( double deltaT ){
     }
 }
 
+void Level::processInput( std::array< bool, 349 > const& keys ){
+    assert( tankPtr_ );
+
+    if( keys[ GLFW_KEY_W ] ){
+        tankPtr_->setOrient( game::Tank::Orienation::Top );
+        tankPtr_->setVelocity( tankPtr_->getMaxAllowedSpd() );
+    }else if( keys[ GLFW_KEY_A ] ){
+        tankPtr_->setOrient( game::Tank::Orienation::Left );
+        tankPtr_->setVelocity( tankPtr_->getMaxAllowedSpd() );
+    }else if( keys[ GLFW_KEY_S ] ){
+        tankPtr_->setOrient( game::Tank::Orienation::Bottom );
+        tankPtr_->setVelocity( tankPtr_->getMaxAllowedSpd() );
+    }else if( keys[ GLFW_KEY_D ] ){
+        tankPtr_->setOrient( game::Tank::Orienation::Right );
+        tankPtr_->setVelocity( tankPtr_->getMaxAllowedSpd() );
+    }else{
+        tankPtr_->setVelocity( 0.0f );
+    }
+
+    if( keys[GLFW_KEY_SPACE  ] ) tankPtr_->fire();
+}
+
+void Level::initPhysics(){
+    auto& resm = resources::ResourceManager::getInstance();
+    tankPtr_ = std::make_shared< game::Tank >( 
+        resm.getSprite( "tankSprite_top" )
+        , resm.getSprite( "tankSprite_bottom" )
+        , resm.getSprite( "tankSprite_left" )
+        , resm.getSprite( "tankSprite_right" )
+        , 0.05f
+        , player1Respawn()
+        , glm::vec2( game::Level::TILE_SIZE, game::Level::TILE_SIZE )
+        , 0.0f );
+
+    phys::PhysicsEngine::getInstance().add( tankPtr_ );
+}
+
 void Level::render()const{
+    if( tankPtr_ )tankPtr_->render();
+
     for( auto optr : mapObjects_ ){
         if( optr ){
             optr->render();

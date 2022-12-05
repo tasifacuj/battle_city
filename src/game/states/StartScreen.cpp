@@ -27,6 +27,7 @@ std::shared_ptr< renderer::Sprite > makeDescriptionSprite( char d ){
     case 'F': return {};
     default:
         assert( 0 );
+        return {};
     }
 }
 }

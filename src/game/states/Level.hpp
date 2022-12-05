@@ -13,6 +13,7 @@
 
 namespace game{
     class GameObjectInterface;
+    class Tank;
 
     class Level : public GameStateInterface{
         size_t                                                  width_;
@@ -25,7 +26,7 @@ namespace game{
         glm::ivec2                                              enemyRespawn_3_;
         unsigned                                                widthPixels_{0};
         unsigned                                                heightPixels_{0};
-
+        std::shared_ptr< game::Tank >                           tankPtr_;
     public:// == CONSTANTS ==
         static constexpr unsigned TILE_SIZE = 16;
     public:// == CTOR ==
@@ -38,7 +39,7 @@ namespace game{
         virtual void render() const override;
         virtual unsigned int getStateWidth() const override;
         virtual unsigned int getStateHeight() const override;
-        
+        virtual void processInput( std::array< bool, 349 > const& keys ) override;
     public:// == Level ==
         size_t width()const{
             return ( width_ + 3 ) * TILE_SIZE;
@@ -69,5 +70,6 @@ namespace game{
         }
 
         std::vector< std::shared_ptr< GameObjectInterface > > obectsInArea( glm::vec2 const& bottomLeft, glm::vec2 const& topRight );
+        void initPhysics();
     };
 }

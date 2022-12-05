@@ -20,36 +20,23 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-const int g_windowSizeX = 13 * 16;
-const int g_windowSizeY = 14 * 16;
+const int g_windowSizeX = 16;
+const int g_windowSizeY = 15;
+const int SCALE         = 3;
+const int BLOCK_SIZE    = 16;
 
-glm::ivec2 g_windowSize( g_windowSizeX, g_windowSizeY );
+glm::ivec2 g_windowSize( SCALE * BLOCK_SIZE * g_windowSizeX, SCALE * BLOCK_SIZE * g_windowSizeY );
 Game g_game( g_windowSize );
 
 void onWindowSizeChangedStatic(GLFWwindow* window, int width, int height){
     g_windowSize.x = width;
     g_windowSize.y = height;
-    // const float aspect_ratio = 13.0f /14.0f;
-    const float aspect_ratio = static_cast< float >( g_game.currentLevelWidth() ) / static_cast< float > ( g_game.currentLevelHeight() );
-    GLint viewPortWidth = g_windowSize.x;
-    GLint viewPortHeight = g_windowSize.y;
-    GLint viewPortLeftOffset = 0;
-    GLint viewPortBottomOffset = 0;
-
-    if( static_cast<float>( g_windowSize.x ) / g_windowSize.y > aspect_ratio ){
-        viewPortWidth = static_cast<int>( g_windowSize.y * aspect_ratio );
-        viewPortLeftOffset = static_cast<int>( (g_windowSize.x - viewPortWidth) * 0.5f );
-    }else{
-        viewPortHeight = static_cast< int >( g_windowSize.x / aspect_ratio );
-        viewPortBottomOffset = static_cast<int>((g_windowSize.y - viewPortHeight) * 0.5f);
-    }
-
-    glViewport( viewPortLeftOffset, viewPortBottomOffset, viewPortWidth, viewPortHeight);
+    g_game.setWinfowSize( g_windowSize );
 }
 
 bool isEagle = false;
 
-void onKeyPressed(GLFWwindow* pWnd, int keyCode, int scanCode, int action, int mode) {
+void onKeyPressed(GLFWwindow* pWnd, int keyCode, int scanCode, int action, int /*mode*/) {
     if (keyCode == GLFW_KEY_ESCAPE) {
         glfwSetWindowShouldClose(pWnd, GL_TRUE);
     }

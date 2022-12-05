@@ -85,6 +85,8 @@ void PhysicsEngine::add( std::shared_ptr< game::GameObjectInterface > obj ){
 
 void PhysicsEngine::setLevel( std::shared_ptr< game::Level > levelPtr ){
     levelPtr_ = levelPtr;
+    dynamicObjects_.clear();
+    levelPtr->initPhysics();
 }
 
 bool PhysicsEngine::hasIntersection( Collider const& lhsCollider, glm::vec2 const& lhsPos, Collider const& rhsCollider, glm::vec2 const& rhsPos ){

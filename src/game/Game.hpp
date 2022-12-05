@@ -9,9 +9,7 @@
 // project
 
 namespace game{
-    class Tank;
-    class Level;
-    class StartScreen;
+    class GameStateInterface;
 }
 
 class Game final{
@@ -29,11 +27,9 @@ public:// == CONSTANTS ==
     static const int g_windowSizeY = 480;
 private:
     std::array< bool, 349 > keys_;
-    GameState                               state_{ GameState::START_SCREEN };
-    glm::ivec2                              windowSize_{ g_windowSizeX, g_windowSizeY };
-    std::shared_ptr< game::Tank >           tankPtr_;
-    std::shared_ptr< game::Level >          level0Ptr_;
-    std::shared_ptr< game::StartScreen >    startScreenPtr_;
+    GameState                                   state_{ GameState::START_SCREEN };
+    glm::ivec2                                  windowSize_{ g_windowSizeX, g_windowSizeY };
+    std::shared_ptr< game::GameStateInterface>  gameStatePtr_;
 public:
     Game( glm::ivec2 const& size );
     ~Game();
@@ -47,4 +43,9 @@ public:
 
     size_t currentLevelWidth()const;
     size_t currentLevelHeight()const;
+    void setWinfowSize( glm::ivec2 const& size );
+
+private:
+    void startNewLevel( size_t levelId );
+    void updateViewPort();
 };

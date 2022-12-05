@@ -25,6 +25,33 @@ Game::Game( glm::ivec2 const& size )
     keys_.fill( false );
 }
 
+void Game::setWinfowSize( glm::ivec2 const& size ){
+    windowSize_ = size;
+    updateViewPort();
+}
+
+void Game::updateViewPort(){
+    const float aspect_ratio = static_cast< float >( currentLevelWidth() ) / static_cast< float > ( currentLevelHeight() );
+    GLint viewPortWidth = windowSize_.x;
+    GLint viewPortHeight = windowSize_.y;
+    GLint viewPortLeftOffset = 0;
+    GLint viewPortBottomOffset = 0;
+
+    if( static_cast<float>( windowSize_.x ) / windowSize_.y > aspect_ratio ){
+        viewPortWidth = static_cast<int>( windowSize_.y * aspect_ratio );
+        viewPortLeftOffset = static_cast<int>( (windowSize_.x - viewPortWidth) * 0.5f );
+    }else{
+        viewPortHeight = static_cast< int >( windowSize_.x / aspect_ratio );
+        viewPortBottomOffset = static_cast<int>((windowSize_.y - viewPortHeight) * 0.5f);
+    }
+
+    glViewport( viewPortLeftOffset, viewPortBottomOffset, viewPortWidth, viewPortHeight);
+    glm::mat4 projMatrix = glm::ortho( 0.0f, float( currentLevelWidth() ), 0.0f, float( currentLevelHeight() ), -100.0f, 100.0f );
+    auto spriteProgramPtr = resources::ResourceManager::getInstance().getShaderProgram( "spriteShader" );
+    spriteProgramPtr->use();
+        spriteProgramPtr->setMatrix4( "projection", projMatrix );
+}
+
 Game::~Game(){}
 
 bool Game::initialize(){
@@ -42,98 +69,44 @@ bool Game::initialize(){
         return false;
     }
 
-    startScreenPtr_ = std::make_shared< game::StartScreen >( resourceManager.getStartScreen() );
-    level0Ptr_ = std::make_shared< game::Level >( resourceManager.getLevels()[ 0 ] );
-    auto& pheng = phys::PhysicsEngine::getInstance();
-    pheng.setLevel( level0Ptr_ );
-    windowSize_.x = static_cast<int>( level0Ptr_->getStateWidth() );
-    windowSize_.y = static_cast<int>( level0Ptr_->getStateHeight() );
-    glm::mat4 projMatrix = glm::ortho( 0.0f, float( windowSize_.x ), 0.0f, float( windowSize_.y ), -100.0f, 100.0f );
-    spriteProgramPtr->use();
-        spriteProgramPtr->setInt( "sampler", 0 );
-        spriteProgramPtr->setMatrix4( "projection", projMatrix );
+    gameStatePtr_ = std::make_shared< game::StartScreen >( resourceManager.getStartScreen() );
+    setWinfowSize( windowSize_ );
 
-
-    {// tank
-       
-        // tankSpritePtr->setState( "tankTopState" );
-        tankPtr_ = std::make_shared< game::Tank >( 
-            resourceManager.getSprite( "tankSprite_top" )
-            , resourceManager.getSprite( "tankSprite_bottom" )
-            , resourceManager.getSprite( "tankSprite_left" )
-            , resourceManager.getSprite( "tankSprite_right" )
-            , 0.05f
-            , level0Ptr_->player1Respawn()
-            , glm::vec2( game::Level::TILE_SIZE, game::Level::TILE_SIZE )
-            , 0.0f );
-        
-    }
-
-    pheng.add( tankPtr_ );
     return true;
 }
 
 void Game::update( double deltaT ){
     switch(state_){
         case GameState::START_SCREEN:
-            if( keys_[ GLFW_KEY_ENTER ] ) state_ = GameState::LEVEL;
+            if( keys_[ GLFW_KEY_ENTER ] ){
+                state_ = GameState::LEVEL;
+                startNewLevel( 0 );
+            }
         break;
         case GameState::LEVEL:
-            if( level0Ptr_ ){
-                level0Ptr_->update( deltaT );
-            }
-
-            if( tankPtr_ ){
-                if( keys_[ GLFW_KEY_W ] ){
-                    tankPtr_->setOrient( game::Tank::Orienation::Top );
-                    tankPtr_->setVelocity( tankPtr_->getMaxAllowedSpd() );
-                }else if( keys_[ GLFW_KEY_A ] ){
-                    tankPtr_->setOrient( game::Tank::Orienation::Left );
-                    tankPtr_->setVelocity( tankPtr_->getMaxAllowedSpd() );
-                }else if( keys_[ GLFW_KEY_S ] ){
-                    tankPtr_->setOrient( game::Tank::Orienation::Bottom );
-                    tankPtr_->setVelocity( tankPtr_->getMaxAllowedSpd() );
-                }else if( keys_[ GLFW_KEY_D ] ){
-                    tankPtr_->setOrient( game::Tank::Orienation::Right );
-                    tankPtr_->setVelocity( tankPtr_->getMaxAllowedSpd() );
-                }else{
-                    tankPtr_->setVelocity( 0.0f );
-                }
-
-                if( tankPtr_ && keys_[GLFW_KEY_SPACE  ] ) tankPtr_->fire();
-
-                tankPtr_->update( deltaT );
-            }
+            gameStatePtr_->processInput( keys_ );
+            gameStatePtr_->update( deltaT );
         break;
     }
 }
 
 void Game::render(){
-    switch (state_)
-    {
-    case GameState::START_SCREEN:
-        startScreenPtr_->render();
-        break;
-    
-    case GameState::LEVEL:
-        if( tankPtr_ )tankPtr_->render();
-        if( level0Ptr_ )level0Ptr_->render();
-        break;
-    }
+    gameStatePtr_->render();
+}
+
+void Game::startNewLevel( size_t levelId ){
+    std::cout << "Starting level " << levelId << std::endl;
+    auto& resm = resources::ResourceManager::getInstance();
+    auto levelPtr = std::make_shared< game::Level >( resm.getLevels()[ levelId ] );
+    phys::PhysicsEngine::getInstance().setLevel( levelPtr );
+    gameStatePtr_ = levelPtr;
+    updateViewPort();
 }
 
 size_t Game::currentLevelWidth()const{
-    switch( state_ ){
-        case GameState::START_SCREEN: return startScreenPtr_->getStateWidth();
-        case GameState::LEVEL: return level0Ptr_->getStateWidth();
-        default: assert(0);
-    }
+    return gameStatePtr_->getStateWidth();
 }
 
 size_t Game::currentLevelHeight()const{
-    switch( state_ ){
-        case GameState::START_SCREEN: return startScreenPtr_->getStateHeight();
-        case GameState::LEVEL: return level0Ptr_->getStateHeight();
-        default: assert(0);
-    }
+    return gameStatePtr_->getStateHeight();
 }
