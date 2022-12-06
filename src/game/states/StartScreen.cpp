@@ -40,7 +40,7 @@ namespace game{
 
 StartScreen::StartScreen( std::vector< std::string > const& description, Game& game )
 : menuSprite_( std::make_pair( resources::ResourceManager::getInstance().getSprite( "menu" ), glm::vec2( 11 * BLOCK_SIZE, START_SCREEN_HEIGHT - description.size() * BLOCK_SIZE - MENU_HEIGHT - 5 * BLOCK_SIZE ) ) )
-, tankSprite_( std::make_pair( resources::ResourceManager::getInstance().getSprite( "tankSprite_right" ), glm::vec2( 8 * BLOCK_SIZE, menuSprite_.second.y + 6 * BLOCK_SIZE - currentMenuSelection_ * BLOCK_SIZE * 2 ) ) )
+, tankSprite_( std::make_pair( resources::ResourceManager::getInstance().getSprite( "player1_yellow_tank_type1_sprite_right" ), glm::vec2( 8 * BLOCK_SIZE, menuSprite_.second.y + 6 * BLOCK_SIZE - currentMenuSelection_ * BLOCK_SIZE * 2 ) ) )
 , tankAnimator_( tankSprite_.first )
 , game_( game ){
     if( description.empty() ){

@@ -63,6 +63,8 @@ add_executable( BattleCity
 	src/phys/PhysicsEngine.hpp
 )
 
+set_property( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME} )
+
 target_compile_features( ${PROJECT_NAME} PUBLIC cxx_std_17 )
 add_compile_definitions( _SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING )
 

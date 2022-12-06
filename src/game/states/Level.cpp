@@ -151,10 +151,7 @@ void Level::processInput( std::array< bool, 349 > const& keys ){
 void Level::initPhysics(){
     auto& resm = resources::ResourceManager::getInstance();
     tankPtr_ = std::make_shared< game::Tank >( 
-        resm.getSprite( "tankSprite_top" )
-        , resm.getSprite( "tankSprite_bottom" )
-        , resm.getSprite( "tankSprite_left" )
-        , resm.getSprite( "tankSprite_right" )
+        Tank::ETankType::Player1Yellow_type1
         , 0.05f
         , player1Respawn()
         , glm::vec2( game::Level::TILE_SIZE, game::Level::TILE_SIZE )

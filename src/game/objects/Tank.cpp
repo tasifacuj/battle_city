@@ -5,17 +5,13 @@
 
 
 namespace game{
-Tank::Tank( std::shared_ptr< renderer::Sprite > spriteTop
-        , std::shared_ptr< renderer::Sprite > spriteBottom
-        , std::shared_ptr< renderer::Sprite > spriteLeft
-        , std::shared_ptr< renderer::Sprite > spriteRight
-        , float spd, glm::vec2 const& pos, glm::vec2 const& size, float layer )
+Tank::Tank( Tank::ETankType eType, float spd, glm::vec2 const& pos, glm::vec2 const& size, float layer )
 : GameObject( ObjectType::TANK, pos, size, 0.0f, layer )
 , orient_( Orienation::Top )
-, spriteTop_( spriteTop )
-, spriteBottom_( spriteBottom )
-, spriteLeft_( spriteLeft )
-, spriteRight_( spriteRight )
+, spriteTop_( resources::ResourceManager::getInstance().getSprite( getTankSpriteFromType(eType) + "_top" ) )
+, spriteBottom_( resources::ResourceManager::getInstance().getSprite( getTankSpriteFromType(eType) + "_bottom" ) )
+, spriteLeft_( resources::ResourceManager::getInstance().getSprite(getTankSpriteFromType(eType) + "_left" ) )
+, spriteRight_( resources::ResourceManager::getInstance().getSprite(getTankSpriteFromType(eType) + "_right" ) )
 , maxAllowedSpd_( spd )
 , animatorTop_( spriteTop_ )
 , animatorBottom_( spriteBottom_ )
@@ -153,6 +149,10 @@ void Tank::setVelocity( float v ){
 void Tank::fire(){
     if( !isSpawning_ && !bulletPtr_->isActive() )
         bulletPtr_->fire( position_ + size_ / 4.0f, direction_ );
+}
+
+const std::string& Tank::getTankSpriteFromType(const Tank::ETankType eType){
+    return TankTypeToSpriteString[static_cast<size_t>(eType)];
 }
 
 }
