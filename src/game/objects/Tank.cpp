@@ -2,12 +2,12 @@
 #include "../../renderer/Sprite.hpp"
 #include "../../resources/ResourceManager.hpp"
 #include "Bullet.hpp"
-
+#include "../AIComponent.hpp"
 
 namespace game{
-Tank::Tank( Tank::ETankType eType, float spd, glm::vec2 const& pos, glm::vec2 const& size, float layer )
+Tank::Tank( Tank::ETankType eType, bool hasAI, bool hasShield, Orienation orient, float spd, glm::vec2 const& pos, glm::vec2 const& size, float layer )
 : GameObject( ObjectType::TANK, pos, size, 0.0f, layer )
-, orient_( Orienation::Top )
+, orient_( orient )
 , spriteTop_( resources::ResourceManager::getInstance().getSprite( getTankSpriteFromType(eType) + "_top" ) )
 , spriteBottom_( resources::ResourceManager::getInstance().getSprite( getTankSpriteFromType(eType) + "_bottom" ) )
 , spriteLeft_( resources::ResourceManager::getInstance().getSprite(getTankSpriteFromType(eType) + "_left" ) )
@@ -21,12 +21,16 @@ Tank::Tank( Tank::ETankType eType, float spd, glm::vec2 const& pos, glm::vec2 co
 , respawnAnimator_( spriteRespawn_ )
 , spriteShield_( resources::ResourceManager::getInstance().getSprite( "shield" ) )
 , shieldAnimator_( spriteShield_ )
-, bulletPtr_( std::make_shared< Bullet >( 0.1f, position_, size_ / 2.0f, size_, layer )){
+, bulletPtr_( std::make_shared< Bullet >( 0.15f, position_, size_ / 2.0f, size_, layer )){
+    setOrient( orient );
     isSpawning_ = true;
-    respawnTimer_.setCallback( [this](){
+    respawnTimer_.setCallback( [this, hasShield](){
         isSpawning_ = false;
-        hasShield_ = true;
-        shieldTimer_.start( 2000 );
+        if( aiPtr_ ) setVelocity( maxAllowedSpd_ );
+        hasShield_ = hasShield;
+
+        if( hasShield )
+            shieldTimer_.start( 2000 );
     } );
 
     respawnTimer_.start( 1000 );
@@ -37,6 +41,10 @@ Tank::Tank( Tank::ETankType eType, float spd, glm::vec2 const& pos, glm::vec2 co
 
     colliders_.emplace_back( phys::AABB{glm::vec2(0.0f, 0.0f),  size_} );
     phys::PhysicsEngine::getInstance().add( bulletPtr_ );
+
+    if( hasAI ){
+        aiPtr_ = std::make_unique< AIComponent >( *this );
+    }
 }
 
 void Tank::update( double deltaT ){
@@ -49,6 +57,8 @@ void Tank::update( double deltaT ){
         respawnTimer_.update( deltaT );
         return;
     }
+
+    if( aiPtr_ ) aiPtr_->update( deltaT );
 
     if( hasShield_ ){
         shieldAnimator_.update( deltaT );
@@ -113,7 +123,7 @@ void Tank::render()const{
 }
 
 void Tank::setOrient( Tank::Orienation orient ){
-    if( orient_ == orient ) return;
+    // if( orient_ == orient ) return;
 
     orient_ = orient;
 

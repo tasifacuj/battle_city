@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include <memory>
-
+#include <set>
 // glm
 #include <glm/vec2.hpp>
 
@@ -16,6 +16,9 @@ namespace game{
     class Tank;
 
     class Level : public GameStateInterface{
+    public: // == TYPES ==
+        using TankPtr = std::shared_ptr< game::Tank >;
+    private:
         size_t                                                  width_;
         size_t                                                  height_;
         std::vector< std::shared_ptr< GameObjectInterface > >   mapObjects_;
@@ -27,6 +30,7 @@ namespace game{
         unsigned                                                widthPixels_{0};
         unsigned                                                heightPixels_{0};
         std::shared_ptr< game::Tank >                           tankPtr_;
+        std::set< TankPtr >                                     enemies_;
     public:// == CONSTANTS ==
         static constexpr unsigned TILE_SIZE = 16;
     public:// == CTOR ==

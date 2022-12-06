@@ -17,6 +17,7 @@ namespace renderer{
 
 namespace game{
     class Bullet;
+    class AIComponent;
 
     class Tank : public GameObject{
     public:// == TYPES ==
@@ -109,8 +110,13 @@ namespace game{
         sys::Timer                          shieldTimer_;
 
         std::shared_ptr< Bullet >           bulletPtr_;
+
+        std::unique_ptr< AIComponent >      aiPtr_;
     public:// == CTORs ==
         explicit Tank( ETankType type
+        , bool hasAI
+        , bool hasShield
+        , Orienation orient
         , float spd
         , glm::vec2 const& pos
         , glm::vec2 const& zize

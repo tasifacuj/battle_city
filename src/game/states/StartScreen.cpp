@@ -86,11 +86,6 @@ void StartScreen::update( double deltaT ){
 }
 
 void StartScreen::processInput( std::array< bool, 349 > const& keys ){
-    // if( keys[ GLFW_KEY_ENTER ] ){
-    //     state_ = GameState::LEVEL;
-    //     startNewLevel( 0 );
-    // }
-
     if( !keys[ GLFW_KEY_W ] && !keys[ GLFW_KEY_S ] ) keyWasReleased_ = true;
 
     if( keyWasReleased_ ){

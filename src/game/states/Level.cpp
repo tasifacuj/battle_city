@@ -116,15 +116,7 @@ Level::Level( std::vector< std::string > const& levelDescr ){
     std::cout << "Map objects " << mapObjects_.size() << std::endl;
 }
 
-void Level::update( double deltaT ){
-    tankPtr_->update( deltaT );
 
-    for( auto optr : mapObjects_ ){
-        if( optr ){
-            optr->update( deltaT );
-        }
-    }
-}
 
 void Level::processInput( std::array< bool, 349 > const& keys ){
     assert( tankPtr_ );
@@ -152,12 +144,38 @@ void Level::initPhysics(){
     auto& resm = resources::ResourceManager::getInstance();
     tankPtr_ = std::make_shared< game::Tank >( 
         Tank::ETankType::Player1Yellow_type1
+        , false
+        , true
+        , game::Tank::Orienation::Top
         , 0.05f
         , player1Respawn()
         , glm::vec2( game::Level::TILE_SIZE, game::Level::TILE_SIZE )
         , 0.0f );
 
-    phys::PhysicsEngine::getInstance().add( tankPtr_ );
+    auto& ph = phys::PhysicsEngine::getInstance();
+    ph.add( tankPtr_ );
+
+    enemies_.emplace( std::make_shared< game::Tank >( Tank::ETankType::EnemyRed_type1, true, false, game::Tank::Orienation::Bottom, 0.05f, enemy1Respawn(), glm::vec2( game::Level::TILE_SIZE, game::Level::TILE_SIZE ), 0.0f ) );
+    enemies_.emplace( std::make_shared< game::Tank >( Tank::ETankType::EnemyRed_type2, true, false, game::Tank::Orienation::Bottom, 0.05f, enemy2Respawn(), glm::vec2( game::Level::TILE_SIZE, game::Level::TILE_SIZE ), 0.0f ) );
+    enemies_.emplace( std::make_shared< game::Tank >( Tank::ETankType::EnemyRed_type3, true, false, game::Tank::Orienation::Bottom, 0.05f, enemy3Respawn(), glm::vec2( game::Level::TILE_SIZE, game::Level::TILE_SIZE ), 0.0f ) );
+
+    for( auto& e: enemies_ ){
+        ph.add( e );
+    }
+}
+
+void Level::update( double deltaT ){
+    tankPtr_->update( deltaT );
+
+    for( auto optr : mapObjects_ ){
+        if( optr ){
+            optr->update( deltaT );
+        }
+    }
+
+    for( auto& e: enemies_ ){
+        e->update( deltaT );
+    }
 }
 
 void Level::render()const{
@@ -167,6 +185,10 @@ void Level::render()const{
         if( optr ){
             optr->render();
         }
+    }
+
+    for( auto& e: enemies_ ){
+        e->render();
     }
 }
 

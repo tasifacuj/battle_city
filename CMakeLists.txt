@@ -55,6 +55,8 @@ add_executable( BattleCity
 	src/game/states/Level.hpp
 	src/game/states/StartScreen.cpp
 	src/game/states/StartScreen.hpp
+	src/game/AIComponent.cpp
+	src/game/AIComponent.hpp
 
 	src/system/Timer.cpp
 	src/system/Timer.hpp
