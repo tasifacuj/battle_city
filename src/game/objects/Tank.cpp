@@ -28,17 +28,12 @@ Tank::Tank( Tank::ETankType eType, bool hasAI, bool hasShield, Orienation orient
         isSpawning_ = false;
         if( aiPtr_ ) setVelocity( maxAllowedSpd_ );
         hasShield_ = hasShield;
-
-        if( hasShield )
-            shieldTimer_.start( 2000 );
+        if( hasShield )shieldTimer_.start( 2000 );
     } );
-
     respawnTimer_.start( 1000 );
-
     shieldTimer_.setCallback( [this](){
         hasShield_ = false;
     } );
-
     colliders_.emplace_back( phys::AABB{glm::vec2(0.0f, 0.0f),  size_} );
     phys::PhysicsEngine::getInstance().add( bulletPtr_ );
 

@@ -78,32 +78,24 @@ bool Game::initialize(){
 void Game::update( double deltaT ){
     gameStatePtr_->processInput( keys_ );
     gameStatePtr_->update( deltaT );
-    
-    // switch(state_){
-    //     case GameState::START_SCREEN:
-    //         if( keys_[ GLFW_KEY_ENTER ] ){
-    //             state_ = GameState::LEVEL;
-    //             startNewLevel( 0 );
-    //         }
-    //     break;
-    //     case GameState::LEVEL:
-    //         gameStatePtr_->processInput( keys_ );
-    //         gameStatePtr_->update( deltaT );
-    //     break;
-    // }
 }
 
 void Game::render(){
     gameStatePtr_->render();
 }
 
-void Game::startNewLevel( size_t levelId ){
+void Game::startNewLevel( size_t levelId, GameMode mode ){
+    levelIdx_ = levelId;
     std::cout << "Starting level " << levelId << std::endl;
     auto& resm = resources::ResourceManager::getInstance();
-    auto levelPtr = std::make_shared< game::Level >( resm.getLevels()[ levelId ] );
+    auto levelPtr = std::make_shared< game::Level >( resm.getLevels()[ levelId ], mode );
     phys::PhysicsEngine::getInstance().setLevel( levelPtr );
     gameStatePtr_ = levelPtr;
     updateViewPort();
+}
+
+void Game::nextLevel( Game::GameMode mode ){
+    startNewLevel( levelIdx_ + 1, mode );
 }
 
 size_t Game::currentLevelWidth()const{

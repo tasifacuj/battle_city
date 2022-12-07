@@ -105,9 +105,11 @@ void StartScreen::processInput( std::array< bool, 349 > const& keys ){
         switch ( currentMenuSelection_ )
         {
         case 0:
-            game_.startNewLevel( 0 );
+            game_.startNewLevel( 0, Game::GameMode::SINGLE_PLAYER );
             break;
-        
+        case 1:
+            game_.startNewLevel( 0, Game::GameMode::TWO_PLAYERS );
+            break;
         default:
             break;
         }

@@ -49,7 +49,8 @@ static std::shared_ptr< game::GameObjectInterface > makeGameObject( char objectT
 
 namespace game{
 
-Level::Level( std::vector< std::string > const& levelDescr ){
+Level::Level( std::vector< std::string > const& levelDescr, Game::GameMode mode )
+: mode_( mode ) {
     if( levelDescr.empty() ){
         std::cout << "Empty level\n";
         return;
@@ -119,7 +120,48 @@ Level::Level( std::vector< std::string > const& levelDescr ){
 
 
 void Level::processInput( std::array< bool, 349 > const& keys ){
-    assert( tankPtr_ );
+    switch ( mode_ )
+    {
+    case Game::GameMode::TWO_PLAYERS:
+        if( keys[ GLFW_KEY_UP ] ){
+            tank2Ptr_->setOrient( game::Tank::Orienation::Top );
+            tank2Ptr_->setVelocity( tank2Ptr_->getMaxAllowedSpd() );
+        }else if( keys[ GLFW_KEY_LEFT ] ){
+            tank2Ptr_->setOrient( game::Tank::Orienation::Left );
+            tank2Ptr_->setVelocity( tank2Ptr_->getMaxAllowedSpd() );
+        }else if( keys[ GLFW_KEY_DOWN ] ){
+            tank2Ptr_->setOrient( game::Tank::Orienation::Bottom );
+            tank2Ptr_->setVelocity( tank2Ptr_->getMaxAllowedSpd() );
+        }else if( keys[ GLFW_KEY_RIGHT ] ){
+            tank2Ptr_->setOrient( game::Tank::Orienation::Right );
+            tank2Ptr_->setVelocity( tank2Ptr_->getMaxAllowedSpd() );
+        }else{
+            tank2Ptr_->setVelocity( 0.0f );
+        }
+
+        if( keys[GLFW_KEY_RIGHT_SHIFT  ] ) tank2Ptr_->fire();
+    
+    case Game::GameMode::SINGLE_PLAYER:
+        if( keys[ GLFW_KEY_W ] ){
+            tankPtr_->setOrient( game::Tank::Orienation::Top );
+            tankPtr_->setVelocity( tankPtr_->getMaxAllowedSpd() );
+        }else if( keys[ GLFW_KEY_A ] ){
+            tankPtr_->setOrient( game::Tank::Orienation::Left );
+            tankPtr_->setVelocity( tankPtr_->getMaxAllowedSpd() );
+        }else if( keys[ GLFW_KEY_S ] ){
+            tankPtr_->setOrient( game::Tank::Orienation::Bottom );
+            tankPtr_->setVelocity( tankPtr_->getMaxAllowedSpd() );
+        }else if( keys[ GLFW_KEY_D ] ){
+            tankPtr_->setOrient( game::Tank::Orienation::Right );
+            tankPtr_->setVelocity( tankPtr_->getMaxAllowedSpd() );
+        }else{
+            tankPtr_->setVelocity( 0.0f );
+        }
+
+        if( keys[GLFW_KEY_SPACE  ] ) tankPtr_->fire();
+    default:
+        break;
+    }
 
     if( keys[ GLFW_KEY_W ] ){
         tankPtr_->setOrient( game::Tank::Orienation::Top );
@@ -142,18 +184,36 @@ void Level::processInput( std::array< bool, 349 > const& keys ){
 
 void Level::initPhysics(){
     auto& resm = resources::ResourceManager::getInstance();
-    tankPtr_ = std::make_shared< game::Tank >( 
-        Tank::ETankType::Player1Yellow_type1
-        , false
-        , true
-        , game::Tank::Orienation::Top
-        , 0.05f
-        , player1Respawn()
-        , glm::vec2( game::Level::TILE_SIZE, game::Level::TILE_SIZE )
-        , 0.0f );
-
     auto& ph = phys::PhysicsEngine::getInstance();
-    ph.add( tankPtr_ );
+
+    switch (mode_){
+    case Game::GameMode::TWO_PLAYERS:
+        tank2Ptr_ = std::make_shared< game::Tank >( 
+            Tank::ETankType::Player1Yellow_type1
+            , false
+            , true
+            , game::Tank::Orienation::Top
+            , 0.05f
+            , player2Respawn()
+            , glm::vec2( game::Level::TILE_SIZE, game::Level::TILE_SIZE )
+            , 0.0f 
+        );
+        ph.add( tank2Ptr_ );
+    case Game::GameMode::SINGLE_PLAYER:
+        tankPtr_ = std::make_shared< game::Tank >( 
+            Tank::ETankType::Player2Green_type2
+            , false
+            , true
+            , game::Tank::Orienation::Top
+            , 0.05f
+            , player1Respawn()
+            , glm::vec2( game::Level::TILE_SIZE, game::Level::TILE_SIZE )
+            , 0.0f 
+        );
+        ph.add( tankPtr_ );
+    default:
+        break;
+    }
 
     enemies_.emplace( std::make_shared< game::Tank >( Tank::ETankType::EnemyRed_type1, true, false, game::Tank::Orienation::Bottom, 0.05f, enemy1Respawn(), glm::vec2( game::Level::TILE_SIZE, game::Level::TILE_SIZE ), 0.0f ) );
     enemies_.emplace( std::make_shared< game::Tank >( Tank::ETankType::EnemyRed_type2, true, false, game::Tank::Orienation::Bottom, 0.05f, enemy2Respawn(), glm::vec2( game::Level::TILE_SIZE, game::Level::TILE_SIZE ), 0.0f ) );
@@ -165,7 +225,14 @@ void Level::initPhysics(){
 }
 
 void Level::update( double deltaT ){
-    tankPtr_->update( deltaT );
+    switch (mode_){
+    case Game::GameMode::TWO_PLAYERS:
+        tank2Ptr_ -> update( deltaT );
+    case Game::GameMode::SINGLE_PLAYER:
+        tankPtr_ -> update( deltaT );
+    default:
+        break;
+    }
 
     for( auto optr : mapObjects_ ){
         if( optr ){
@@ -179,7 +246,14 @@ void Level::update( double deltaT ){
 }
 
 void Level::render()const{
-    if( tankPtr_ )tankPtr_->render();
+    switch (mode_){
+    case Game::GameMode::TWO_PLAYERS:
+        tank2Ptr_ -> render();
+    case Game::GameMode::SINGLE_PLAYER:
+        tankPtr_ -> render();
+    default:
+        break;
+    }
 
     for( auto optr : mapObjects_ ){
         if( optr ){

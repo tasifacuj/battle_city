@@ -10,6 +10,7 @@
 
 // project
 #include "GameStateInterface.hpp"
+#include "../Game.hpp"
 
 namespace game{
     class GameObjectInterface;
@@ -30,11 +31,13 @@ namespace game{
         unsigned                                                widthPixels_{0};
         unsigned                                                heightPixels_{0};
         std::shared_ptr< game::Tank >                           tankPtr_;
+        std::shared_ptr< game::Tank >                           tank2Ptr_;
         std::set< TankPtr >                                     enemies_;
+        Game::GameMode                                          mode_;
     public:// == CONSTANTS ==
         static constexpr unsigned TILE_SIZE = 16;
     public:// == CTOR ==
-        Level( std::vector< std::string > const& levelDescr );
+        Level( std::vector< std::string > const& levelDescr, Game::GameMode mode );
         Level( Level const& ) = delete;
         ~Level() = default;
     
